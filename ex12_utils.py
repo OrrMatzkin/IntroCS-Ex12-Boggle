@@ -6,6 +6,9 @@ from boggle_board_randomizer import *
 STEP_LIST = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0),
              (-1, -1)]
 
+ROW = 0
+COL = 1
+
 
 def load_words_dict(
         file_path: str) -> dict:  # TODO check if need to raise special error
@@ -24,13 +27,19 @@ def load_words_dict(
 
 
 def is_valid_path(board: List[List[str]], path: List[Tuple[int]], words: dict):
-    if not path:
+    if not path or len(path) != len(
+            set(path)):  # if path is empty or repetitive
         return
-    words_lst = [key for key in words]
+    for i in range(len(path) - 1):  # checks for step validity
+        if abs(path[i][ROW] - path[i + 1][ROW]) != 1 and \
+                abs(path[i][COL] - path[i + 1][COL]) != 1:
+            return
+    words_lst = [key for key in words]  # unpacks word dict
     path_str = ""
     for coordinate in path:
         if coordinate[0] in (-1, len(board)) or \
-                coordinate[1] in (-1, len(board[0])):
+                coordinate[1] in (-1, len(board[0])):  # checks that the
+            # path is in the board
             return
         path_str += board[coordinate[0]][coordinate[1]]
     return path_str if path_str in words_lst else None
