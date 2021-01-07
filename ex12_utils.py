@@ -1,5 +1,6 @@
 import copy
 from typing import List, Tuple, Union
+
 from boggle_board_randomizer import *
 
 STEP_LIST = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0),
@@ -22,8 +23,17 @@ def load_words_dict(
     return words_dict
 
 
-def is_valid_path(board, path, words):
-    pass
+def is_valid_path(board: List[List[str]], path: List[Tuple[int]], words: dict):
+    if not path:
+        return
+    words_lst = [key for key in words]
+    path_str = ""
+    for coordinate in path:
+        if coordinate[0] in (-1, len(board)) or \
+                coordinate[1] in (-1, len(board[0])):
+            return
+        path_str += board[coordinate[0]][coordinate[1]]
+    return path_str if path_str in words_lst else None
 
 
 def get_neighbors(board, row, col):
