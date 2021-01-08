@@ -1,8 +1,6 @@
 import copy
 from typing import List, Tuple, Union
 
-from boggle_board_randomizer import *
-
 STEP_LIST = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0),
              (-1, -1)]
 
@@ -26,7 +24,8 @@ def load_words_dict(
     return words_dict
 
 
-def is_valid_path(board: List[List[str]], path: List[Tuple[int]], words: dict):
+def is_valid_path(board: List[List[str]], path: List[Tuple[int, int]], words:
+dict):
     if not path or len(path) != len(
             set(path)):  # if path is empty or repetitive
         return
@@ -91,16 +90,20 @@ def search_words(curr_board: List[List[str]],
         return
     if word_remaining_len < 0:  # if reached maximum word length
         return
-    if curr_board[curr_row][curr_col]:  # if had not been here before
+
+    if curr_board[curr_row][curr_col] != "_":  # if had not been here before
         word_remaining_len -= 1
         if word_remaining_len < 0:
             return
         new_str = curr_str + curr_board[curr_row][curr_col]
         new_coords = curr_row, curr_col
         new_board = copy.deepcopy(curr_board)
-        new_board[curr_row][curr_col] = ""
+        new_board[curr_row][curr_col] = "_"
         new_coordinates_lst = copy.deepcopy(curr_coordinates)
         new_coordinates_lst.append(new_coords)
+        if not any(new_str in word for word in words_lst):  # if no matching
+            # words in the list for the current str
+            return
 
         if new_str in words_lst and len(new_coordinates_lst) == \
                 required_word_length:  # if found a word
@@ -136,23 +139,23 @@ def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
     if not words_lst:
         return
     found_words_list = []
-    for i in range(BOARD_SIZE ** 2):  # loops for each tile in the board
+    for i in range(len(board) * len(board[0])):  # loops for each tile in the
+        # board
         row, col = i // len(board), i % len(board[0])
-        found_words_list.extend(search_words(curr_board=board,
-                                             curr_row=row,
-                                             curr_col=col,
-                                             words_lst=words_lst,
-                                             word_remaining_len=n,
-                                             curr_coordinates=[],
-                                             found_word_lst=[],
-                                             curr_str="",
-                                             required_word_length=n))
+        new_found_lst = search_words(curr_board=board,
+                                     curr_row=row,
+                                     curr_col=col,
+                                     words_lst=words_lst,
+                                     word_remaining_len=n,
+                                     curr_coordinates=[],
+                                     found_word_lst=[],
+                                     curr_str="",
+                                     required_word_length=n)
+        if new_found_lst:
+            found_words_list.extend(new_found_lst)
     return found_words_list
 
 
 if __name__ == "__main__":
     pass
-# for _ in range(16):
-#     b = randomize_board()
-#     print(b)
-#     print(find_length_n_words(3, b, load_words_dict("boggle_dict.txt")))
+
