@@ -52,6 +52,9 @@ def get_neighbors(board, row, col):
     return neighbors_lst
 
 
+
+
+
 def search_words(curr_board: List[List[str]],
                  curr_row: int,
                  curr_col: int,
