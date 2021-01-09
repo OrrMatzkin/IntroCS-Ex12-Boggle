@@ -24,10 +24,20 @@ def load_words_dict(
     return words_dict
 
 
-def is_valid_path(board: List[List[str]], path: List[Tuple[int, int]], words:
-dict):
-    if not path or len(path) != len(
-            set(path)):  # if path is empty or repetitive
+def is_valid_path(board: List[List[str]],
+                  path: List[Tuple[int, int]],
+                  words: dict):
+    """
+    checks if a list of coordinates is valid as a path in the game
+    :param board: the board of the game
+    :param path: a list of coordinate tuples
+    :param words: a dictionary of words that are possible in the game
+    :return: None if path is not valid or if path dosnet match a word from
+    words, else - the word the path indicates
+    """
+    if not path or len(path) != len(set(path)) or \
+            len(path) not in range(3, 17):  # if path is empty or repetitive or
+        # not a valid length
         return
     for i in range(len(path) - 1):  # checks for step validity
         if abs(path[i][ROW] - path[i + 1][ROW]) != 1 and \
@@ -36,9 +46,9 @@ dict):
     words_lst = [key for key in words]  # unpacks word dict
     path_str = ""
     for coordinate in path:
-        if coordinate[0] in (-1, len(board)) or \
-                coordinate[1] in (-1, len(board[0])):  # checks that the
-            # path is in the board
+        if coordinate[0] < 0 or coordinate[0] > len(board) - 1 or \
+                coordinate[1] < 0 or coordinate[1] > len(board[0]) - 1:
+            # checks that the path is in the board
             return
         path_str += board[coordinate[0]][coordinate[1]]
     return path_str if path_str in words_lst else None
@@ -84,8 +94,8 @@ def search_words(curr_board: List[List[str]],
     starting place
     """
 
-    if curr_row in (-1, len(curr_board)) or curr_col in (-1, len(curr_board[
-                                                                     0])):
+    if curr_row < 0 or curr_row > len(curr_board) - 1 or \
+            curr_col < 0 or curr_col > len(curr_board[0]) - 1:
         # if out of the board
         return
     if word_remaining_len < 0:  # if reached maximum word length
@@ -109,17 +119,17 @@ def search_words(curr_board: List[List[str]],
                 required_word_length:  # if found a word
             found_word_tuple = new_str, new_coordinates_lst
             found_word_lst.append(tuple(found_word_tuple))
-
-        for next_row, next_col in STEP_LIST:  # take next step
-            search_words(new_board,
-                         curr_row + next_row,
-                         curr_col + next_col,
-                         words_lst,
-                         word_remaining_len,
-                         new_coordinates_lst,
-                         found_word_lst,
-                         new_str,
-                         required_word_length)
+        else:
+            for next_row, next_col in STEP_LIST:  # take next step
+                search_words(new_board,
+                             curr_row + next_row,
+                             curr_col + next_col,
+                             words_lst,
+                             word_remaining_len,
+                             new_coordinates_lst,
+                             found_word_lst,
+                             new_str,
+                             required_word_length)
         return found_word_lst
 
 
@@ -137,6 +147,8 @@ def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
     words_lst = [key for key in words]  # creates a list from the words in the
     # dictionary
     if not words_lst:
+        return
+    if n not in range(3, 17):
         return
     found_words_list = []
     for i in range(len(board) * len(board[0])):  # loops for each tile in the
@@ -158,4 +170,3 @@ def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
 
 if __name__ == "__main__":
     pass
-
