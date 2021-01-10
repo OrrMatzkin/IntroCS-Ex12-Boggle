@@ -14,7 +14,7 @@ class Timer(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-
+        self.configure(highlightbackground="black", highlightthickness=1)
         self._time_running = False
         self.seconds_left = self._SECONDS
         self._timer_display = tk.Label(self,
@@ -87,7 +87,7 @@ class Score(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-
+        self.configure(highlightbackground="black", highlightthickness=1)
         self.score = 0
 
         self._score_display = tk.Label(self,
@@ -150,8 +150,8 @@ class Cube(tk.Frame):
                                 font=(self._FONT, self._FONT_SIZE),
 
 
-                                bg=self._MAIN_COLOR, relief="groove",
-                                borderwidth=6)
+                                bg=self._MAIN_COLOR, relief="raised",
+                                borderwidth=4)
         self.content.grid()
 
         self.content.bind("<B1-Motion>", self.generate_events)
@@ -225,7 +225,7 @@ class Cube(tk.Frame):
 class Board(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 30
-    _SIZE = (6, 5)
+    _SIZE = (4, 4)
 
     def __init__(self, parent, controller):
         """
@@ -236,11 +236,11 @@ class Board(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.configure(padx=10, pady=10)
+        self.configure(padx=10, pady=10, highlightbackground="black", highlightthickness=1)
         self.word_display = tk.Label(self, text='',
                                       font=(self._FONT, self._FONT_SIZE))
         self.word_display.grid()
-        self.container = tk.Frame(self)
+        self.container = tk.Frame(self,)
         self.container.grid()
         self.cubes = []
         self._init_cubes()
@@ -288,6 +288,8 @@ class Board(tk.Frame):
         """
         self.current_visited_positions.append(cube_position)
 
+    def get_visited_cube_positions(self):
+        return self.current_visited_positions
 
     def get_word(self):
         """
@@ -302,6 +304,7 @@ class Board(tk.Frame):
         the cubes.
         """
         self.current_word = ''
+        self.current_visited_positions = []
         self.last_cube_visited = None
         self.word_display.configure(text=self.current_word)
 
@@ -357,9 +360,9 @@ class WordDisplay(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
 
-        self.score = 0
+        self.configure(highlightbackground="black", highlightthickness=1)
 
-        self._word_display = tk.Label(self, text='test',
+        self._word_display = tk.Label(self, text='this will be the word display',
                                       font=(self._FONT, self._FONT_SIZE))
 
         self._word_display.grid()
