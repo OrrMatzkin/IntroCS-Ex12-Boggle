@@ -1,5 +1,7 @@
-import tkinter as tk
 import datetime
+import tkinter as tk
+from typing import List
+
 
 
 class Timer(tk.Frame):
@@ -62,7 +64,7 @@ class Timer(tk.Frame):
         :return:
         """
         if self._time_running:
-            self.seconds_left = self._SECONDS+1
+            self.seconds_left = self._SECONDS + 1
         else:
             self.seconds_left = self._SECONDS
             self._timer_display['text'] = self.convert_seconds_str()
@@ -97,7 +99,7 @@ class Score(tk.Frame):
         self._score_display.grid()
 
         self.add = tk.Button(self, text="add",
-                               command=self.add_score).grid()
+                             command=self.add_score).grid()
 
         self.restart = tk.Button(self, text="restart",
                                  command=self.reset_score).grid()
@@ -148,7 +150,6 @@ class Cube(tk.Frame):
         self.content = tk.Label(self, padx=2, pady=2, cursor='hand1',
                                 text=self.letter,
                                 font=(self._FONT, self._FONT_SIZE),
-
 
                                 bg=self._MAIN_COLOR, relief="raised",
                                 borderwidth=4)
@@ -225,9 +226,8 @@ class Cube(tk.Frame):
 class Board(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 30
-    _SIZE = (4, 4)
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, random_board: List[List[str]]):
         """
         Initializing Board.
         :param parent: frame container (parent widget)
@@ -236,11 +236,14 @@ class Board(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.configure(padx=10, pady=10, highlightbackground="black", highlightthickness=1)
+        self.configure(padx=10, pady=10, highlightbackground="black",
+                       highlightthickness=1)
         self.word_display = tk.Label(self, text='',
-                                      font=(self._FONT, self._FONT_SIZE))
+                                     font=(self._FONT, self._FONT_SIZE))
+        self.random_board = random_board
+
         self.word_display.grid()
-        self.container = tk.Frame(self,)
+        self.container = tk.Frame(self, )
         self.container.grid()
         self.cubes = []
         self._init_cubes()
@@ -252,14 +255,13 @@ class Board(tk.Frame):
         """
         Initializing the board cubes.
         """
-        letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDSEJFHSJKDFHD'
-        for pos_x in range(self._SIZE[0]):
+        for pos_x in range(len(self.random_board)):
             row = []
-            for pos_y in range(self._SIZE[1]):
-                cube = Cube(self.container, self, letters[0:3], pos_x, pos_y)
+            for pos_y in range(len(self.random_board[0])):
+                cube = Cube(self.container, self,
+                            self.random_board[pos_x][pos_y], pos_x, pos_y)
                 cube.grid(row=pos_x, column=pos_y, sticky="nsew")
                 row.append(cube)
-                letters = letters[2:]
             self.cubes.append(row)
 
     def reset_used_cube(self):
@@ -325,7 +327,7 @@ class Board(tk.Frame):
         if self.last_cube_visited is None:
             return True
         else:
-            return cube.get_position() in\
+            return cube.get_position() in \
                    self.get_all_possible_neighbours_position(
                        self.last_cube_visited)
 
@@ -336,14 +338,14 @@ class Board(tk.Frame):
         :return: list of all valid positions
         """
         cube_pos = cube.get_position()
-        possible_neighbours_position = [(cube_pos[0]-1, cube_pos[1]-1),
-                                        (cube_pos[0]-1, cube_pos[1]),
-                                        (cube_pos[0]-1, cube_pos[1]+1),
-                                        (cube_pos[0], cube_pos[1]-1),
-                                        (cube_pos[0], cube_pos[1]+1),
-                                        (cube_pos[0]+1, cube_pos[1]-1),
-                                        (cube_pos[0]+1, cube_pos[1]),
-                                        (cube_pos[0]+1, cube_pos[1]+1)]
+        possible_neighbours_position = [(cube_pos[0] - 1, cube_pos[1] - 1),
+                                        (cube_pos[0] - 1, cube_pos[1]),
+                                        (cube_pos[0] - 1, cube_pos[1] + 1),
+                                        (cube_pos[0], cube_pos[1] - 1),
+                                        (cube_pos[0], cube_pos[1] + 1),
+                                        (cube_pos[0] + 1, cube_pos[1] - 1),
+                                        (cube_pos[0] + 1, cube_pos[1]),
+                                        (cube_pos[0] + 1, cube_pos[1] + 1)]
         return [pos for pos in possible_neighbours_position if 0 <=
                 pos[0] <= 3 and 0 <= pos[1] <= 3]
 
@@ -362,8 +364,8 @@ class WordDisplay(tk.Frame):
 
         self.configure(highlightbackground="black", highlightthickness=1)
 
-        self._word_display = tk.Label(self, text='this will be the word display',
+        self._word_display = tk.Label(self,
+                                      text='this will be the word display',
                                       font=(self._FONT, self._FONT_SIZE))
 
         self._word_display.grid()
-

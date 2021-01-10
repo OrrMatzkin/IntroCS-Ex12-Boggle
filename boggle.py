@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from boggle_board_randomizer import *
 from welcome_frame import WelcomeFrame
 from instructions_frame import InstructionsFrame
 from play_frame import PlayFrame
@@ -27,7 +27,7 @@ class Game(tk.Tk):
 
         self.geometry(f'{self._SCREEN_SIZE[0]}x{self._SCREEN_SIZE[1]}')
         self.title(self._TITLE_NAME)
-
+        self.random_board = randomize_board()
         # the container is what holds all frames, the parent widget.
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -37,7 +37,8 @@ class Game(tk.Tk):
         self.frames = {"welcome_frame": WelcomeFrame(parent=container,
                                                      controller=self),
                        "play_frame": PlayFrame(parent=container,
-                                               controller=self),
+                                               controller=self,
+                                               random_board=self.random_board),
                        "instructions_frame": InstructionsFrame(
                            parent=container,
                            controller=self)}
@@ -47,6 +48,9 @@ class Game(tk.Tk):
         self.frames["instructions_frame"].grid(row=0, column=0, sticky="nsew")
 
         self.set_frame("welcome_frame")
+        self.bind('<ButtonRelease-1>', self.release)
+
+
 
     def set_frame(self, page_name):
         """
@@ -54,6 +58,11 @@ class Game(tk.Tk):
         """
         frame = self.frames[page_name]
         frame.tkraise()
+
+    def release(self, event):
+        print("in boggle",self.frames["play_frame"].board.get_visited_cube_positions())
+        self.frames["play_frame"].board.reset_used_cube()
+        self.frames["play_frame"].board.reset()
 
 
 if __name__ == '__main__':
