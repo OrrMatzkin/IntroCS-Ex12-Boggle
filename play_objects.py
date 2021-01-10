@@ -124,7 +124,7 @@ class Score(tk.Frame):
 
 class Cube(tk.Frame):
     _FONT = 'Shree Devanagari 714'
-    _FONT_SIZE = 26
+    _FONT_SIZE = 24
     _WIDTH = 2
     _HEIGHT = 1
     _MAIN_COLOR = 'white'
@@ -150,7 +150,7 @@ class Cube(tk.Frame):
         self.content = tk.Label(self, padx=2, pady=2, cursor='hand1',
                                 text=self.letter,
                                 font=(self._FONT, self._FONT_SIZE),
-
+                                width=self._WIDTH, height=self._HEIGHT,
                                 bg=self._MAIN_COLOR, relief="raised",
                                 borderwidth=4)
         self.content.grid()
@@ -369,3 +369,4 @@ class WordDisplay(tk.Frame):
                                       font=(self._FONT, self._FONT_SIZE))
 
         self._word_display.grid()
+

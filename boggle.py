@@ -50,7 +50,9 @@ class Game(tk.Tk):
         self.set_frame("welcome_frame")
         self.bind('<ButtonRelease-1>', self.release)
 
-
+        self.board = self.frames['play_frame'].board
+        self.score = self.frames['play_frame'].score
+        self.words_display = self.frames['play_frame'].words_display
 
     def set_frame(self, page_name):
         """
@@ -60,9 +62,9 @@ class Game(tk.Tk):
         frame.tkraise()
 
     def release(self, event):
-        print("in boggle",self.frames["play_frame"].board.get_visited_cube_positions())
-        self.frames["play_frame"].board.reset_used_cube()
-        self.frames["play_frame"].board.reset()
+        print("in boggle", self.board.get_visited_cube_positions())
+        self.board.reset_used_cube()
+        self.board.reset()
 
 
 if __name__ == '__main__':
