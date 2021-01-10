@@ -45,15 +45,14 @@ class Timer(tk.Frame):
             self._time_running = self.after(1000, self.start_countdown)
         else:
             self._time_running = False
-            print('time finished')
         self._timer_display['text'] = self.convert_seconds_str()
 
     def stop_countdown(self):
         """
         Stops the countdown.
         """
+        # todo: remove method
         if self._time_running:
-            print('time stoped')
             self.after_cancel(self._time_running)
             self._time_running = False
 
@@ -140,20 +139,19 @@ class Cube(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-        self.configure(borderwidth=2, cursor='hand1', padx=10, pady=10,
-                       highlightcolor='red')
+        self.configure(borderwidth=2, padx=4, pady=4)
         self.controller = controller
-        self.score = 0
         self.letter = letter
         self.entered = False
         self.position = (pos_x, pos_y)
 
-        self.content = tk.Label(self, padx=2, pady=2,
+        self.content = tk.Label(self, padx=2, pady=2, cursor='hand1',
                                 text=self.letter,
                                 font=(self._FONT, self._FONT_SIZE),
-                                width=self._WIDTH, height=self._HEIGHT,
+
+
                                 bg=self._MAIN_COLOR, relief="groove",
-                                borderwidth=5)
+                                borderwidth=6)
         self.content.grid()
 
         self.content.bind("<B1-Motion>", self.generate_events)
@@ -171,7 +169,6 @@ class Cube(tk.Frame):
         (board) is holding.
         :param event: bind event (not used)
         """
-        print(f'Entered {self.position}')
         if not self.entered and self.controller.valid_next_cube(self):
             self.content.configure(bg=self._CHOSEN_COLOR)
             self.controller.add_letter_to_current_word(self.letter)
@@ -183,13 +180,14 @@ class Cube(tk.Frame):
         A method triggered when a the mouse leaves the cube.
         :param event: bind event (not used)
         """
+        # todo: remove method
         pass
 
     def generate_events(self, event):
         """
         Generates 2 new event sequences:
         1. <<B1-Enter>> : a cube is entered while (!) another cube is pressed.
-        2. <<B1-Leave>> : a cube is leaved while (!) another cube is pressed.
+        2. <<B1-Leave>> : a cube is left while (!) another cube is pressed.
         :param event: bind event
         """
         # widget is the widget which is at the mouse coordinates
@@ -226,7 +224,7 @@ class Cube(tk.Frame):
 class Board(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 30
-    _SIZE = (4, 4)
+    _SIZE = (6, 5)
 
     def __init__(self, parent, controller):
         """
@@ -238,25 +236,29 @@ class Board(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(padx=10, pady=10)
+        self.word_display = tk.Label(self, text='',
+                                      font=(self._FONT, self._FONT_SIZE))
+        self.word_display.grid()
         self.container = tk.Frame(self)
         self.container.grid()
         self.cubes = []
         self._init_cubes()
         self.current_word = ''
+        self.current_visited_positions = []
         self.last_cube_visited = None
 
     def _init_cubes(self):
         """
         Initializing the board cubes.
         """
-        letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDSEJFHSJKDFHD'
         for pos_x in range(self._SIZE[0]):
             row = []
             for pos_y in range(self._SIZE[1]):
-                cube = Cube(self.container, self, letters[0], pos_x, pos_y)
+                cube = Cube(self.container, self, letters[0:3], pos_x, pos_y)
                 cube.grid(row=pos_x, column=pos_y, sticky="nsew")
                 row.append(cube)
-                letters = letters[1:]
+                letters = letters[2:]
             self.cubes.append(row)
 
     def reset_used_cube(self):
@@ -276,6 +278,15 @@ class Board(tk.Frame):
         :param letter: a string representing a cube letter
         """
         self.current_word += letter
+        self.word_display.configure(text=self.current_word)
+
+    def add_position_to_positions_path(self, cube_position):
+        """
+        Adds given position to the visited positions list.
+        :param cube_position: a tuple representing a cube position in board
+        """
+        self.current_visited_positions.append(cube_position)
+
 
     def get_word(self):
         """
@@ -291,6 +302,7 @@ class Board(tk.Frame):
         """
         self.current_word = ''
         self.last_cube_visited = None
+        self.word_display.configure(text=self.current_word)
 
     def set_last_cube_visited(self, cube):
         """
@@ -330,4 +342,24 @@ class Board(tk.Frame):
                                         (cube_pos[0]+1, cube_pos[1]+1)]
         return [pos for pos in possible_neighbours_position if 0 <=
                 pos[0] <= 3 and 0 <= pos[1] <= 3]
+
+
+class WordDisplay(tk.Frame):
+    _FONT = 'Shree Devanagari 714'
+    _FONT_SIZE = 20
+
+    def __init__(self, parent):
+        """
+        Initializing Timer frame.
+        :param parent: frame container (parent widget)
+        """
+        # initializing inherited Frame class
+        tk.Frame.__init__(self, parent)
+
+        self.score = 0
+
+        self._word_display = tk.Label(self, text='test',
+                                      font=(self._FONT, self._FONT_SIZE))
+
+        self._word_display.grid()
 
