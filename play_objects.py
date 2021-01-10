@@ -48,8 +48,6 @@ class Timer(tk.Frame):
             self.time_running = False
         self._timer_display['text'] = self.convert_seconds_str()
 
-
-
     def stop_countdown(self):
         """
         Stops the countdown.
@@ -247,46 +245,23 @@ class Board(tk.Frame):
         self.container = tk.Frame(self, )
         self.container.grid()
         self.cubes = []
-        self.false_init_cubes()
+        self.init_cubes(True)
         self.current_word = ''
         self.current_visited_positions = []
         self.last_cube_visited = None
 
-    def init_cubes(self):
+    def init_cubes(self, first: bool = False):
         """
         Initializing the board cubes.
         """
         for pos_x in range(len(self.random_board)):
             row = []
             for pos_y in range(len(self.random_board[0])):
-                cube = Cube(self.container, self,
-                            self.random_board[pos_x][pos_y], pos_x, pos_y)
-                cube.grid(row=pos_x, column=pos_y, sticky="nsew")
-                row.append(cube)
-            self.cubes.append(row)
-
-    def false_init_cubes(self):
-        """
-        Initializing the board cubes.
-        """
-        for pos_x in range(len(self.random_board)):
-            row = []
-            for pos_y in range(len(self.random_board[0])):
-                cube = Cube(self.container, self,
-                            '', pos_x, pos_y)
-                cube.grid(row=pos_x, column=pos_y, sticky="nsew")
-                row.append(cube)
-            self.cubes.append(row)
-
-    def reset_init_cubes(self, board):
-        """
-        Initializing the board cubes.
-        """
-        for pos_x in range(len(board)):
-            row = []
-            for pos_y in range(len(board[0])):
-                cube = Cube(self.container, self,
-                            board[pos_x][pos_y], pos_x, pos_y)
+                if first:  # if berfore player starts
+                    cube = Cube(self.container, self, "", pos_x, pos_y)
+                else:
+                    cube = Cube(self.container, self, self.random_board[
+                        pos_x][pos_y], pos_x, pos_y)
                 cube.grid(row=pos_x, column=pos_y, sticky="nsew")
                 row.append(cube)
             self.cubes.append(row)
@@ -396,4 +371,3 @@ class WordDisplay(tk.Frame):
                                       font=(self._FONT, self._FONT_SIZE))
 
         self._word_display.grid()
-

@@ -7,7 +7,6 @@ from play_frame import PlayFrame
 from welcome_frame import WelcomeFrame
 
 
-
 class Game(tk.Tk):
     """
     A Tk class inherited Game class
@@ -63,6 +62,11 @@ class Game(tk.Tk):
         self._user_coordinates_inputs = dict()
         self.found_words = []
 
+    def reset_user_guesses(self):
+        self._word_dict = load_words_dict()
+        self._latest_input = []
+        self._user_coordinates_inputs = dict()
+        self.found_words = []
 
     def set_frame(self, page_name):
         """
@@ -72,42 +76,59 @@ class Game(tk.Tk):
         frame.tkraise()
 
     def release(self, event):
+        """
+        if player releases the left mouse button
+        :param event:
+        """
         self._latest_input = self.board.get_visited_cube_positions()
-        print(self._latest_input)
-        if not self._latest_input:
+        if not self._latest_input:  # if coordinates list is empty
             pass
         elif str(self._latest_input) in self._user_coordinates_inputs:
+            # if the current path has already been tried
             pass
         else:
             self._user_coordinates_inputs[str(self._latest_input)] = True
+            # add path to paths dictionary
             new_word = is_valid_path(self.random_board, self._latest_input,
-                                     self._word_dict)
-            if new_word and new_word not in self.found_words:
+                                     self._word_dict)  # check if path points
+            # to a valid word
+            if new_word and new_word not in self.found_words:  # if the path
+                # points to a vaild word that has not been guessed before
                 self.add_score(self.calculate_score(self._latest_input))
                 self.found_words.append(new_word)
-                print("found word!", new_word)
+                # TODO add change of colour to the word if correct
 
         self.board.reset_used_cube()
         self.board.reset()
 
     def calculate_score(self, word_path: List[Tuple[int, int]]):
+        """
+        calculates the score for the found word
+        :param word_path: the list of coordinates of the word
+        """
         return len(word_path) ** 2
 
     def press_start_button(self):
+        """
+        if player presses start button
+        """
         if not self.timer.time_running:
             self.timer.start_countdown()
             self.board.init_cubes()
             self.frames['play_frame'].start_button.configure(bg='white')
 
     def press_restart_button(self):
+        """
+        if player presses restart button
+        """
+        self.reset_user_guesses()
         self.timer.restart_countdown()
-        self.board.reset_init_cubes(randomize_board())
+        self.random_board = randomize_board()
+        self.board.random_board = self.random_board
+        self.board.init_cubes()
 
     def add_score(self, score):
         self.score.add_score(score)
-
-
-
 
 
 if __name__ == '__main__':
