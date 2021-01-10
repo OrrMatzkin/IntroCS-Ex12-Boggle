@@ -1,8 +1,10 @@
 import tkinter as tk
+
 from boggle_board_randomizer import *
-from welcome_frame import WelcomeFrame
+from ex12_utils import *
 from instructions_frame import InstructionsFrame
 from play_frame import PlayFrame
+from welcome_frame import WelcomeFrame
 
 
 class Game(tk.Tk):
@@ -54,6 +56,12 @@ class Game(tk.Tk):
         self.score = self.frames['play_frame'].score
         self.words_display = self.frames['play_frame'].words_display
 
+        self._word_dict = load_words_dict()
+        self._latest_input = []
+        self._user_coordinates_inputs = dict()
+        self.found_words = []
+        self.score = 0
+
     def set_frame(self, page_name):
         """
         Show a frame for the given page name
@@ -62,9 +70,27 @@ class Game(tk.Tk):
         frame.tkraise()
 
     def release(self, event):
-        print("in boggle", self.board.get_visited_cube_positions())
+        self._latest_input = self.board.get_visited_cube_positions()
+        print(self._latest_input)
+        if not self._latest_input:
+            pass
+        elif str(self._latest_input) in self._user_coordinates_inputs:
+            pass
+        else:
+            self._user_coordinates_inputs[str(self._latest_input)] = True
+            new_word = is_valid_path(self.random_board, self._latest_input,
+                                     self._word_dict)
+            if new_word and new_word not in self.found_words:
+                self.add_score(self._latest_input)
+                self.found_words.append(new_word)
+                print("found word!", new_word)
+                print("score", self.score)
+
         self.board.reset_used_cube()
         self.board.reset()
+
+    def add_score(self, word_path: List[Tuple[int, int]]):
+        self.score += len(word_path) ** 2
 
 
 if __name__ == '__main__':

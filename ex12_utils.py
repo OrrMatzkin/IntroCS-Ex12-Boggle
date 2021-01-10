@@ -9,7 +9,7 @@ COL = 1
 
 
 def load_words_dict(
-        file_path: str) -> dict:  # TODO check if need to raise special error
+        file_path: str = "boggle_dict.txt") -> dict:
     """
     loads words from a given .txt file and uses them as keys in a dictionary
     with all values being True
@@ -43,7 +43,7 @@ def is_valid_path(board: List[List[str]],
         if abs(path[i][ROW] - path[i + 1][ROW]) != 1 and \
                 abs(path[i][COL] - path[i + 1][COL]) != 1:
             return
-    words_lst = [key for key in words]  # unpacks word dict
+    # words_lst = [key for key in words]  # unpacks word dict
     path_str = ""
     for coordinate in path:
         if coordinate[0] < 0 or coordinate[0] > len(board) - 1 or \
@@ -51,7 +51,7 @@ def is_valid_path(board: List[List[str]],
             # checks that the path is in the board
             return
         path_str += board[coordinate[0]][coordinate[1]]
-    return path_str if path_str in words_lst else None
+    return path_str if path_str in words else None
 
 
 def get_neighbors(board, row, col):
@@ -169,7 +169,3 @@ def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
         if new_found_lst:
             found_words_list.extend(new_found_lst)
     return found_words_list
-
-
-if __name__ == "__main__":
-    pass
