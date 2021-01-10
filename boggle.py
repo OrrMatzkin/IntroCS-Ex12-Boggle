@@ -49,7 +49,9 @@ class Game(tk.Tk):
         self.set_frame("welcome_frame")
 
     def set_frame(self, page_name):
-        '''Show a frame for the given page name'''
+        """
+        Show a frame for the given page name
+        """
         frame = self.frames[page_name]
         frame.tkraise()
 

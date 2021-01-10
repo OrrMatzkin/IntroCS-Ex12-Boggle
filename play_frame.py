@@ -1,5 +1,5 @@
 import tkinter as tk
-from play_objects import Timer, Score, Cube, Board
+from play_objects import Timer, Score, Cube, Board, WordDisplay
 
 
 class PlayFrame(tk.Frame):
@@ -7,9 +7,6 @@ class PlayFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-
-
-
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         # container.grid_rowconfigure(0, weight=1)
@@ -21,10 +18,6 @@ class PlayFrame(tk.Frame):
 
         self.board.grid(row=1, column=1, sticky="nsew")
 
-
-
-
-
         self.button = tk.Button(self, text="back",
                                 command=lambda: controller
                                 .set_frame("welcome_frame")).pack()
@@ -34,8 +27,6 @@ class PlayFrame(tk.Frame):
 
     def release(self, event):
         self.board.reset_used_cube()
-        print('release')
-        print(self.board.get_word())
         self.board.reset()
 
 

@@ -172,6 +172,7 @@ class Cube(tk.Frame):
         if not self.entered and self.controller.valid_next_cube(self):
             self.content.configure(bg=self._CHOSEN_COLOR)
             self.controller.add_letter_to_current_word(self.letter)
+            self.controller.add_position_to_positions_path(self.position)
             self.entered = True
             self.controller.set_last_cube_visited(self)
 
