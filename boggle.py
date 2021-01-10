@@ -7,6 +7,7 @@ from play_frame import PlayFrame
 from welcome_frame import WelcomeFrame
 
 
+
 class Game(tk.Tk):
     """
     A Tk class inherited Game class
@@ -54,13 +55,14 @@ class Game(tk.Tk):
 
         self.board = self.frames['play_frame'].board
         self.score = self.frames['play_frame'].score
+        self.timer = self.frames['play_frame'].timer
         self.words_display = self.frames['play_frame'].words_display
 
         self._word_dict = load_words_dict()
         self._latest_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
-        self.score = 0
+
 
     def set_frame(self, page_name):
         """
@@ -81,16 +83,31 @@ class Game(tk.Tk):
             new_word = is_valid_path(self.random_board, self._latest_input,
                                      self._word_dict)
             if new_word and new_word not in self.found_words:
-                self.add_score(self._latest_input)
+                self.add_score(self.calculate_score(self._latest_input))
                 self.found_words.append(new_word)
                 print("found word!", new_word)
-                print("score", self.score)
 
         self.board.reset_used_cube()
         self.board.reset()
 
-    def add_score(self, word_path: List[Tuple[int, int]]):
-        self.score += len(word_path) ** 2
+    def calculate_score(self, word_path: List[Tuple[int, int]]):
+        return len(word_path) ** 2
+
+    def press_start_button(self):
+        if not self.timer.time_running:
+            self.timer.start_countdown()
+            self.board.init_cubes()
+            self.frames['play_frame'].start_button.configure(bg='white')
+
+    def press_restart_button(self):
+        self.timer.restart_countdown()
+        self.board.reset_init_cubes(randomize_board())
+
+    def add_score(self, score):
+        self.score.add_score(score)
+
+
+
 
 
 if __name__ == '__main__':

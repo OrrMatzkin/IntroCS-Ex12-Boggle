@@ -14,9 +14,10 @@ class PlayFrame(tk.Frame):
         # container.grid_rowconfigure(0, weight=1)
         # container.grid_columnconfigure(0, weight=1)
         self.random_board = random_board
-        self.timer = Timer(container).grid(row=0, column=2, sticky='ne' )
-        self.score = Score(container).grid(row=0, column=3, sticky='ne')
-
+        self.timer = Timer(container)
+        self.timer.grid(row=0, column=2, sticky='ne' )
+        self.score = Score(container)
+        self.score.grid(row=0, column=3, sticky='ne')
 
 
         self.board = Board(container, self, random_board=self.random_board)
@@ -29,16 +30,15 @@ class PlayFrame(tk.Frame):
                                      width=14).pack(side='right')
         self.start_button = tk.Button(self, text='Start',
                                       font=(self._FONT, 18, 'bold'),
-                                      width=14).pack(side='right', expand='yes')
+                                      width=14, command=self.controller.press_start_button)
+        self.start_button.pack(side='right', expand='yes')
         self.restart_button = tk.Button(self, text='Restart', font=(self._FONT, 18),
-                                     width=14).pack(side='right')
+                                     width=14, command=self.controller.press_restart_button).pack(side='right')
         self.hint_button = tk.Button(self, text='Back',
                                         font=(self._FONT, 18),
                                         width=14, command=lambda: controller.
                                      set_frame("welcome_frame")).pack(
             side='left')
-
-
 
 
 

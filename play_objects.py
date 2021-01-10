@@ -3,7 +3,6 @@ import tkinter as tk
 from typing import List
 
 
-
 class Timer(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 28
@@ -17,7 +16,7 @@ class Timer(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
         self.configure(highlightbackground="black", highlightthickness=1)
-        self._time_running = False
+        self.time_running = False
         self.seconds_left = self._SECONDS
         self._timer_display = tk.Label(self,
                                        text=self.convert_seconds_str(),
@@ -39,31 +38,33 @@ class Timer(tk.Frame):
         Each call it sets the text value of the timer_display
         label to the new time left.
         """
-
-        if self.seconds_left <= 30:
-            self._timer_display['fg'] = 'red2'
         if self.seconds_left:
+            self.time_running = True
             self.seconds_left -= 1
-            self._time_running = self.after(1000, self.start_countdown)
+            self.time_running = self.after(1000, self.start_countdown)
+            if self.seconds_left <= 30:
+                self._timer_display['fg'] = 'red2'
         else:
-            self._time_running = False
+            self.time_running = False
         self._timer_display['text'] = self.convert_seconds_str()
+
+
 
     def stop_countdown(self):
         """
         Stops the countdown.
         """
         # todo: remove method
-        if self._time_running:
-            self.after_cancel(self._time_running)
-            self._time_running = False
+        if self.time_running:
+            self.after_cancel(self.time_running)
+            self.time_running = False
 
     def restart_countdown(self):
         """
         Restart the countdown.
         :return:
         """
-        if self._time_running:
+        if self.time_running:
             self.seconds_left = self._SECONDS + 1
         else:
             self.seconds_left = self._SECONDS
@@ -246,12 +247,12 @@ class Board(tk.Frame):
         self.container = tk.Frame(self, )
         self.container.grid()
         self.cubes = []
-        self._init_cubes()
+        self.false_init_cubes()
         self.current_word = ''
         self.current_visited_positions = []
         self.last_cube_visited = None
 
-    def _init_cubes(self):
+    def init_cubes(self):
         """
         Initializing the board cubes.
         """
@@ -260,6 +261,32 @@ class Board(tk.Frame):
             for pos_y in range(len(self.random_board[0])):
                 cube = Cube(self.container, self,
                             self.random_board[pos_x][pos_y], pos_x, pos_y)
+                cube.grid(row=pos_x, column=pos_y, sticky="nsew")
+                row.append(cube)
+            self.cubes.append(row)
+
+    def false_init_cubes(self):
+        """
+        Initializing the board cubes.
+        """
+        for pos_x in range(len(self.random_board)):
+            row = []
+            for pos_y in range(len(self.random_board[0])):
+                cube = Cube(self.container, self,
+                            '', pos_x, pos_y)
+                cube.grid(row=pos_x, column=pos_y, sticky="nsew")
+                row.append(cube)
+            self.cubes.append(row)
+
+    def reset_init_cubes(self, board):
+        """
+        Initializing the board cubes.
+        """
+        for pos_x in range(len(board)):
+            row = []
+            for pos_y in range(len(board[0])):
+                cube = Cube(self.container, self,
+                            board[pos_x][pos_y], pos_x, pos_y)
                 cube.grid(row=pos_x, column=pos_y, sticky="nsew")
                 row.append(cube)
             self.cubes.append(row)
