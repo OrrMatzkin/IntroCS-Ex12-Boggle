@@ -144,14 +144,42 @@ class Game(tk.Tk):
         self.board.init_cubes()
         self.board.hide_and_show_cube_labels(True)
 
+    def press_back_button(self):
+        """
+        if player presses back button.
+        """
+        self.board.hide_and_show_cube_labels(True)
+        self.after(100, self.back_confirm)
+
     def restart_confirm(self):
+        """
+        Displays a confirmation window before restarting the game.
+        If user presses 'YES' the game restart, if user presses 'NO' the game
+        continues.
+        """
         window = tk.messagebox.askyesno('Restart Game',
                                        'Are you sure you want to restart your ongoing game?',
-                                       icon='question', )
+                                       icon='question')
         if window:
+            window2 = tk.messagebox.showinfo('Reminder',
+                                            'To start a new game just press start',
+                                            icon='info')
             self.press_restart_button()
         else:
             self.board.hide_and_show_cube_labels(False)
+
+    def back_confirm(self):
+        window = tk.messagebox.askyesno('Exit Game',
+                                       'Are you sure you want to Exit your ongoing game?',
+                                       icon='question')
+        if window:
+            self.press_restart_button()
+            self.set_frame("welcome_frame")
+        else:
+            self.board.hide_and_show_cube_labels(False)
+
+
+
 
 
     def add_score(self, score):

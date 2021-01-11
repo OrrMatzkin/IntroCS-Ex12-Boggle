@@ -39,9 +39,8 @@ class PlayFrame(tk.Frame):
         #     side='right')
         self.back_button = tk.Button(self, text='Back',
                                      font=(self._FONT, 18),
-                                     width=14, command=lambda: controller.
-                                     set_frame("welcome_frame")).pack(
-            side='left')
+                                     width=14, command=self.controller.press_back_button)
+        self.back_button.pack(side='left')
 
 
 
