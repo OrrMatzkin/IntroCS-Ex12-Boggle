@@ -22,7 +22,9 @@ class InstructionsFrame(tk.Frame):
         self.controller = controller
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
+
         self.instructions_img = self.load_instructions_png()
+
         self.button = tk.Button(self, text="Go to the start page",
                                 command=lambda: controller.set_frame(
                                     "welcome_frame"))

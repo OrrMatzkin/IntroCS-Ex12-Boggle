@@ -1,11 +1,13 @@
 import copy
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict
 
 STEP_LIST = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0),
              (-1, -1)]
 
 ROW = 0
 COL = 1
+MIN_WORD_LEN = 3
+MAX_WORD_LEN = 16
 
 
 def load_words_dict(
@@ -32,7 +34,7 @@ def is_valid_path(board: List[List[str]],
     :param board: the board of the game
     :param path: a list of coordinate tuples
     :param words: a dictionary of words that are possible in the game
-    :return: None if path is not valid or if path dosnet match a word from
+    :return: None if path is not valid or if path doesn't match a word from
     words, else - the word the path indicates
     """
     if not path or len(path) != len(set(path)) or \
@@ -43,7 +45,6 @@ def is_valid_path(board: List[List[str]],
         if abs(path[i][ROW] - path[i + 1][ROW]) != 1 and \
                 abs(path[i][COL] - path[i + 1][COL]) != 1:
             return
-    # words_lst = [key for key in words]  # unpacks word dict
     path_str = ""
     for coordinate in path:
         if coordinate[0] < 0 or coordinate[0] > len(board) - 1 or \
@@ -54,21 +55,10 @@ def is_valid_path(board: List[List[str]],
     return path_str if path_str in words else None
 
 
-def get_neighbors(board, row, col):
-    neighbors_lst = [[board[j][i], (j, i)] for j in
-                     range(col - 2, col + 1) for i in
-                     range(row - 2, row + 1) if 0 <= i < 4 and 0 <= j < 4
-                     and board[j][i] != board[row - 1][col - 1]]
-    return neighbors_lst
-
-
-
-
-
 def search_words(curr_board: List[List[str]],
                  curr_row: int,
                  curr_col: int,
-                 words_lst: List[str],
+                 words_dict: Dict,
                  word_remaining_len: int,
                  curr_coordinates: Union[List[Tuple[int, int]], List],
                  found_word_lst: Union[Tuple[str, Union[List[Tuple[int, int]],
@@ -86,8 +76,7 @@ def search_words(curr_board: List[List[str]],
     :param curr_board: the board to search on
     :param curr_row: current x position in the board
     :param curr_col: current x position in the board
-    :param words_lst: the list of possible word to find (from dictionary
-    with the correct length)
+    :param words_dict: the dictionary of possible word to find
     :param curr_coordinates: the list of all coordinates visited in current
     path
     :param found_word_lst: the list of tuples of words that have been found
@@ -96,10 +85,11 @@ def search_words(curr_board: List[List[str]],
     :return: the found_word_lst of all the routs starting with the current
     starting place
     """
-
+    if len(found_word_lst) > 3:  # TODO add parameter for game
+        return found_word_lst
     if curr_row < 0 or curr_row > len(curr_board) - 1 or \
-            curr_col < 0 or curr_col > len(curr_board[0]) - 1:
-        # if out of the board
+            curr_col < 0 or curr_col > len(curr_board[0]) - 1:  # if out of
+        # the board
         return
     if word_remaining_len < 0:  # if reached maximum word length
         return
@@ -114,11 +104,14 @@ def search_words(curr_board: List[List[str]],
         new_board[curr_row][curr_col] = "_"
         new_coordinates_lst = copy.deepcopy(curr_coordinates)
         new_coordinates_lst.append(new_coords)
-        if not any(new_str in word for word in words_lst):  # if no matching
-            # words in the list for the current str
+        new_dict = {key: value for (key, value) in words_dict.items() if
+                    new_str in key and len(key) >= required_word_length}
+        if not new_dict:  # if no
+            # matching words in the dict for the current str
+            print("not any")
             return
-
-        if new_str in words_lst and len(new_coordinates_lst) == \
+        print("are any")
+        if new_str in new_dict.keys() and len(new_coordinates_lst) == \
                 required_word_length:  # if found a word
             found_word_tuple = new_str, new_coordinates_lst
             found_word_lst.append(tuple(found_word_tuple))
@@ -127,7 +120,7 @@ def search_words(curr_board: List[List[str]],
                 search_words(new_board,
                              curr_row + next_row,
                              curr_col + next_col,
-                             words_lst,
+                             new_dict,
                              word_remaining_len,
                              new_coordinates_lst,
                              found_word_lst,
@@ -147,20 +140,20 @@ def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
     :return: the list of tuples of words that have been found
     and their coordinates
     """
-    words_lst = [key for key in words]  # creates a list from the words in the
-    # dictionary
-    if not words_lst:
+    if not words:
         return
-    if n not in range(3, 17):
+    if n not in range(MIN_WORD_LEN, MAX_WORD_LEN + 1):
         return
     found_words_list = []
     for i in range(len(board) * len(board[0])):  # loops for each tile in the
         # board
+        if len(found_words_list) > 5:  # TODO remove
+            return found_words_list
         row, col = i // len(board), i % len(board[0])
         new_found_lst = search_words(curr_board=board,
                                      curr_row=row,
                                      curr_col=col,
-                                     words_lst=words_lst,
+                                     words_dict=words,
                                      word_remaining_len=n,
                                      curr_coordinates=[],
                                      found_word_lst=[],

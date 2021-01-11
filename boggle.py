@@ -16,6 +16,7 @@ class Game(tk.Tk):
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
     _FONT_TITLE = 'Ubicada Pro'
+    _SCORE_COEFFICIENT = 2
 
     def __init__(self, *args, **kwargs):
         """
@@ -30,6 +31,8 @@ class Game(tk.Tk):
         self.geometry(f'{self._SCREEN_SIZE[0]}x{self._SCREEN_SIZE[1]}')
         self.title(self._TITLE_NAME)
         self.random_board = randomize_board()
+        self._word_dict = load_words_dict()
+
         # the container is what holds all frames, the parent widget.
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -57,10 +60,11 @@ class Game(tk.Tk):
         self.timer = self.frames['play_frame'].timer
         self.words_display = self.frames['play_frame'].words_display
 
-        self._word_dict = load_words_dict()
         self._latest_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
+
+        self.last_hint = None
 
     def reset_user_guesses(self):
         self._word_dict = load_words_dict()
@@ -94,19 +98,13 @@ class Game(tk.Tk):
             # to a valid word
             if new_word and new_word not in self.found_words:  # if the path
                 # points to a valid word that has not been guessed before
-                self.add_score(self.calculate_score(self._latest_input))
+                self.add_score(
+                    len(self._latest_input) ** self._SCORE_COEFFICIENT)
                 self.found_words.append(new_word)
                 # TODO add change of colour to the word if correct
 
         self.board.reset_used_cube()
         self.board.reset()
-
-    def calculate_score(self, word_path: List[Tuple[int, int]]):
-        """
-        calculates the score for the found word
-        :param word_path: the list of coordinates of the word
-        """
-        return len(word_path) ** 2
 
     def press_start_button(self):
         """
@@ -129,6 +127,22 @@ class Game(tk.Tk):
 
     def add_score(self, score):
         self.score.add_score(score)
+
+    def get_hint(self):
+        if not self.timer.time_running:
+            return
+        while True:
+            print("trying to get a hint")
+            hint_length = random.randint(3, 4)
+            print("random int is", hint_length)
+            optional_hint = find_length_n_words(hint_length, self.random_board,
+                                                self._word_dict)
+            print("optional hint is", optional_hint)
+            if optional_hint and optional_hint[0] not in self.found_words:
+                self.last_hint = \
+                    optional_hint[random.randint(0, len(optional_hint) - 1)]
+                print("chosen hint:", str(self.last_hint))
+                return
 
 
 if __name__ == '__main__':
