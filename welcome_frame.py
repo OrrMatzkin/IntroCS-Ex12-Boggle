@@ -13,6 +13,7 @@ class WelcomeFrame(tk.Frame):
     _SUB_TITLE_FONT = 'Hobo Std'
     _FONT_TITLE = 'Ubicada Pro'
     _FONT = 'Shree Devanagari 714'
+    _BOGGLE_LOGO_PNG = "logo_Boggle.png"
 
     def __init__(self, parent, controller):
         """
@@ -32,7 +33,7 @@ class WelcomeFrame(tk.Frame):
                                   font=(self._SUB_TITLE_FONT, 14),
                                   fg="grey").pack(side='top', expand='no')
 
-        load = Image.open("logo_Boggle.png")
+        load = Image.open(self._BOGGLE_LOGO_PNG)
         render = ImageTk.PhotoImage(load)
         self.game_logo = tk.Label(self, image=render)
         self.game_logo.image = render

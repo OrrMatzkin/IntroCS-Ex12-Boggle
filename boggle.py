@@ -26,7 +26,7 @@ class Game(tk.Tk):
         """
         # initializing Tk class, Game is the root Tk
         tk.Tk.__init__(self, *args, **kwargs)
-
+        self.resizable(width=False, height=False)
         self.geometry(f'{self._SCREEN_SIZE[0]}x{self._SCREEN_SIZE[1]}')
         self.title(self._TITLE_NAME)
         self.random_board = randomize_board()
@@ -93,7 +93,7 @@ class Game(tk.Tk):
                                      self._word_dict)  # check if path points
             # to a valid word
             if new_word and new_word not in self.found_words:  # if the path
-                # points to a vaild word that has not been guessed before
+                # points to a valid word that has not been guessed before
                 self.add_score(self.calculate_score(self._latest_input))
                 self.found_words.append(new_word)
                 # TODO add change of colour to the word if correct
