@@ -37,7 +37,7 @@ class PlayFrame(tk.Frame):
         #                                 width=14,
         #                                 command=self.controller.press_restart_button).pack(
         #     side='right')
-        self.hint_button = tk.Button(self, text='Back',
+        self.back_button = tk.Button(self, text='Back',
                                      font=(self._FONT, 18),
                                      width=14, command=lambda: controller.
                                      set_frame("welcome_frame")).pack(

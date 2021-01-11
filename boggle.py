@@ -1,4 +1,6 @@
 import tkinter as tk
+from datetime import time
+from tkinter import messagebox
 
 from boggle_board_randomizer import *
 from ex12_utils import *
@@ -109,14 +111,16 @@ class Game(tk.Tk):
         return len(word_path) ** 2
 
     def switch_start_restart(self):
+        """
+        Switches the Start Button in PlayFrame to Restart button and also the
+        other way around accordingly to if the game is running or not.
+        """
         if not self.timer.time_running:
             self.press_start_button()
             self.frames['play_frame'].start_button.configure(text='Restart')
         else:
-            self.press_restart_button()
-            self.frames['play_frame'].start_button.configure(text='Start')
-
-
+            self.board.hide_and_show_cube_labels(True)
+            self.after(100, self.restart_confirm)
 
     def press_start_button(self):
         """
@@ -131,15 +135,30 @@ class Game(tk.Tk):
         """
         if player presses restart button
         """
+        self.frames['play_frame'].start_button.configure(text='Start')
         self.reset_user_guesses()
         self.timer.stop_countdown()
         self.timer.restart_countdown()
-        # self.board.reset_init_cubes(randomize_board())
         self.random_board = randomize_board()
         self.board.random_board = self.random_board
-        self.board.init_cubes(True)
+        self.board.init_cubes()
+        self.board.hide_and_show_cube_labels(True)
+
+    def restart_confirm(self):
+        window = tk.messagebox.askyesno('Restart Game',
+                                       'Are you sure you want to restart your ongoing game?',
+                                       icon='question', )
+        if window:
+            self.press_restart_button()
+        else:
+            self.board.hide_and_show_cube_labels(False)
+
 
     def add_score(self, score):
+        """
+        adds the given score to score and upadtes the Score Widget.
+        :param score: score (int)
+        """
         self.score.add_score(score)
 
 
