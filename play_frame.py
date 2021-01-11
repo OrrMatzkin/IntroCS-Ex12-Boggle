@@ -33,15 +33,18 @@ class PlayFrame(tk.Frame):
         self.start_button = tk.Button(self, text='Start',
                                       font=(self._FONT, 18, 'bold'),
                                       width=14,
-                                      command=self.controller.press_start_button)
+                                      command=self.controller.switch_start_restart)
         self.start_button.pack(side='right', expand='yes')
-        self.restart_button = tk.Button(self, text='Restart',
-                                        font=(self._FONT, 18),
-                                        width=14,
-                                        command=self.controller.press_restart_button).pack(
-            side='right')
+        # self.restart_button = tk.Button(self, text='Restart',
+        #                                 font=(self._FONT, 18),
+        #                                 width=14,
+        #                                 command=self.controller.press_restart_button).pack(
+        #     side='right')
         self.back_button = tk.Button(self, text='Back',
                                      font=(self._FONT, 18),
-                                     width=14, command=lambda: controller.
-                                     set_frame("welcome_frame")).pack(
-            side='left')
+                                     width=14, command=self.controller.press_back_button)
+        self.back_button.pack(side='left')
+
+
+
+

@@ -221,6 +221,26 @@ class Cube(tk.Frame):
         """
         self.content.configure(bg=self._MAIN_COLOR)
 
+    def hide_and_show_label(self, hide):
+        """
+        Hide or Show the cube content.
+        :param hide: if hide is True the function hides the content of herself,
+                     if hide is False the function sets the content to be the
+                     cube letter.
+        """
+        if hide:
+            self.content.configure(text='')
+        if not hide:
+            self.content.configure(text=self.letter)
+
+    def set_content(self, content):
+        """
+        Sets the cube letter to the given letter.
+        :param content: a string value of letter
+        """
+        self.letter = content
+        self.content.configure(text=self.letter)
+
 
 class Board(tk.Frame):
     _FONT = 'Shree Devanagari 714'
@@ -253,18 +273,22 @@ class Board(tk.Frame):
     def init_cubes(self, first: bool = False):
         """
         Initializing the board cubes.
+        :param first: first is True the function is actually creating the cubes
+                      objects, if first is False the function sets the content
+                      of each cube to the the accordingly cell in random_board.
         """
         for pos_x in range(len(self.random_board)):
             row = []
             for pos_y in range(len(self.random_board[0])):
-                if first:  # if berfore player starts
+                if first:  # if before player starts
                     cube = Cube(self.container, self, "", pos_x, pos_y)
+                    cube.grid(row=pos_x, column=pos_y, sticky="nsew")
+                    row.append(cube)
                 else:
-                    cube = Cube(self.container, self, self.random_board[
-                        pos_x][pos_y], pos_x, pos_y)
-                cube.grid(row=pos_x, column=pos_y, sticky="nsew")
-                row.append(cube)
-            self.cubes.append(row)
+                    self.cubes[pos_x][pos_y].set_content(self.random_board[
+                                                           pos_x][pos_y])
+            if first:
+                self.cubes.append(row)
 
     def reset_used_cube(self):
         """
@@ -350,6 +374,14 @@ class Board(tk.Frame):
                                         (cube_pos[0] + 1, cube_pos[1] + 1)]
         return [pos for pos in possible_neighbours_position if 0 <=
                 pos[0] <= 3 and 0 <= pos[1] <= 3]
+
+    def hide_and_show_cube_labels(self, hide):
+        print('test2')
+        for pos_x in range(len(self.random_board)):
+            for pos_y in range(len(self.random_board[0])):
+                self.cubes[pos_x][pos_y].hide_and_show_label(hide)
+
+
 
 
 class WordDisplay(tk.Frame):

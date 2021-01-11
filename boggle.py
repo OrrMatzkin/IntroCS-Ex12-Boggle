@@ -1,4 +1,6 @@
 import tkinter as tk
+from datetime import time
+from tkinter import messagebox
 
 from boggle_board_randomizer import *
 from ex12_utils import *
@@ -16,7 +18,6 @@ class Game(tk.Tk):
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
     _FONT_TITLE = 'Ubicada Pro'
-    _SCORE_COEFFICIENT = 2
 
     def __init__(self, *args, **kwargs):
         """
@@ -106,6 +107,18 @@ class Game(tk.Tk):
         self.board.reset_used_cube()
         self.board.reset()
 
+    def switch_start_restart(self):
+        """
+        Switches the Start Button in PlayFrame to Restart button and also the
+        other way around accordingly to if the game is running or not.
+        """
+        if not self.timer.time_running:
+            self.press_start_button()
+            self.frames['play_frame'].start_button.configure(text='Restart')
+        else:
+            self.board.hide_and_show_cube_labels(True)
+            self.after(100, self.restart_confirm)
+
     def press_start_button(self):
         """
         if player presses start button
@@ -119,13 +132,58 @@ class Game(tk.Tk):
         """
         if player presses restart button
         """
+        self.frames['play_frame'].start_button.configure(text='Start')
         self.reset_user_guesses()
+        self.timer.stop_countdown()
         self.timer.restart_countdown()
         self.random_board = randomize_board()
         self.board.random_board = self.random_board
         self.board.init_cubes()
+        self.board.hide_and_show_cube_labels(True)
+
+    def press_back_button(self):
+        """
+        if player presses back button.
+        """
+        self.board.hide_and_show_cube_labels(True)
+        self.after(100, self.back_confirm)
+
+    def restart_confirm(self):
+        """
+        Displays a confirmation window before restarting the game.
+        If user presses 'YES' the game restart, if user presses 'NO' the game
+        continues.
+        """
+        window = tk.messagebox.askyesno('Restart Game',
+                                       'Are you sure you want to restart your ongoing game?',
+                                       icon='question')
+        if window:
+            window2 = tk.messagebox.showinfo('Reminder',
+                                            'To start a new game just press start',
+                                            icon='info')
+            self.press_restart_button()
+        else:
+            self.board.hide_and_show_cube_labels(False)
+
+    def back_confirm(self):
+        window = tk.messagebox.askyesno('Exit Game',
+                                       'Are you sure you want to Exit your ongoing game?',
+                                       icon='question')
+        if window:
+            self.press_restart_button()
+            self.set_frame("welcome_frame")
+        else:
+            self.board.hide_and_show_cube_labels(False)
+
+
+
+
 
     def add_score(self, score):
+        """
+        adds the given score to score and upadtes the Score Widget.
+        :param score: score (int)
+        """
         self.score.add_score(score)
 
     def get_hint(self):
