@@ -108,6 +108,16 @@ class Game(tk.Tk):
         """
         return len(word_path) ** 2
 
+    def switch_start_restart(self):
+        if not self.timer.time_running:
+            self.press_start_button()
+            self.frames['play_frame'].start_button.configure(text='Restart')
+        else:
+            self.press_restart_button()
+            self.frames['play_frame'].start_button.configure(text='Start')
+
+
+
     def press_start_button(self):
         """
         if player presses start button
@@ -122,10 +132,12 @@ class Game(tk.Tk):
         if player presses restart button
         """
         self.reset_user_guesses()
+        self.timer.stop_countdown()
         self.timer.restart_countdown()
+        # self.board.reset_init_cubes(randomize_board())
         self.random_board = randomize_board()
         self.board.random_board = self.random_board
-        self.board.init_cubes()
+        self.board.init_cubes(True)
 
     def add_score(self, score):
         self.score.add_score(score)
