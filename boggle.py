@@ -1,5 +1,4 @@
 import tkinter as tk
-from datetime import time
 from tkinter import messagebox
 
 from boggle_board_randomizer import *
@@ -13,7 +12,7 @@ class Game(tk.Tk):
     """
     A Tk class inherited Game class
     """
-
+    _SCORE_COEFFICIENT = 2
     _TITLE_NAME = 'IntroCS Ex12'
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
@@ -116,6 +115,7 @@ class Game(tk.Tk):
             self.press_start_button()
             self.frames['play_frame'].start_button.configure(text='Restart')
         else:
+            self.timer.stop_countdown()
             self.board.hide_and_show_cube_labels(True)
             self.after(100, self.restart_confirm)
 
@@ -155,38 +155,38 @@ class Game(tk.Tk):
         continues.
         """
         window = tk.messagebox.askyesno('Restart Game',
-                                       'Are you sure you want to restart your ongoing game?',
-                                       icon='question')
+                                        'Are you sure you want to restart your ongoing game?',
+                                        icon='question')
         if window:
             window2 = tk.messagebox.showinfo('Reminder',
-                                            'To start a new game just press start',
-                                            icon='info')
+                                             'To start a new game just press start',
+                                             icon='info')
             self.press_restart_button()
         else:
             self.board.hide_and_show_cube_labels(False)
+            self.timer.start_countdown()
 
     def back_confirm(self):
+        self.timer.stop_countdown()
         window = tk.messagebox.askyesno('Exit Game',
-                                       'Are you sure you want to Exit your ongoing game?',
-                                       icon='question')
+                                        'Are you sure you want to Exit your ongoing game?',
+                                        icon='question')
         if window:
             self.press_restart_button()
             self.set_frame("welcome_frame")
         else:
+            self.timer.start_countdown()
             self.board.hide_and_show_cube_labels(False)
-
-
-
-
 
     def add_score(self, score):
         """
-        adds the given score to score and upadtes the Score Widget.
+        adds the given score to score and updates the Score Widget.
         :param score: score (int)
         """
         self.score.add_score(score)
 
     def get_hint(self):
+        # TODO add doc
         if not self.timer.time_running:
             return
         while True:
