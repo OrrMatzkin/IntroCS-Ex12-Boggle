@@ -16,7 +16,7 @@ class PlayFrame(tk.Frame):
         self.board = Board(container, self, random_board=self.random_board)
         self.board.place(relx=0.10, rely=0.14)
 
-        self.timer = Timer(container)
+        self.timer = Timer(container, self.controller)
         self.timer.place(relx= 0.82, rely = 0.04)
 
         self.score = Score(container)

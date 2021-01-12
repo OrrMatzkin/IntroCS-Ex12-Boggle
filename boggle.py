@@ -210,6 +210,21 @@ class Game(tk.Tk):
                 self.board.color_hint(self.last_hint)
                 return
 
+    def end_of_time(self):
+        """
+        Displays a message box with game some
+        """
+        window3 = tk.messagebox.showinfo("Time's over",
+                                        f'Well done!\nScore: {self.score.score}\nYou found {self.words_display.get_length()} words',
+
+                                     )
+        if window3:
+            self.press_restart_button()
+
+
+
+
+
 
 if __name__ == '__main__':
     app = Game()

@@ -6,15 +6,16 @@ from typing import List
 class Timer(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 40
-    _SECONDS = 180
+    _SECONDS = 10
 
-    def __init__(self, parent):
+    def __init__(self, parent, controller):
         """
         Initializing Timer frame.
         :param parent: frame container (parent widget)
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
+        self.controller = controller
         # self.configure(highlightbackground="black", highlightthickness=1)
         self.time_running = False
         self.seconds_left = self._SECONDS
@@ -41,6 +42,7 @@ class Timer(tk.Frame):
                 self._timer_display['fg'] = 'red2'
         else:
             self.time_running = False
+            self.controller.end_of_time()
         self._timer_display['text'] = self.convert_seconds_str()
 
     def stop_countdown(self):
@@ -70,6 +72,14 @@ class Timer(tk.Frame):
         """
         time_remain = datetime.timedelta(seconds=self.seconds_left)
         return str(time_remain)[3:]
+
+    # def end_of_time(self):
+    #     """
+    #     Displays a message box with game some
+    #     """
+    #     window = tk.messagebox.showinfo("Time's over",
+    #                                     f'Well done!\nScore: {self.score.score}\nYou found {self.words_display.get_length()}',
+    #                                  )
 
 
 class Score(tk.Frame):
@@ -423,8 +433,6 @@ class Board(tk.Frame):
             self.cubes[pos[0]][pos[1]].set_hint_color()
 
 
-
-
 class WordDisplay(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 20
@@ -454,3 +462,6 @@ class WordDisplay(tk.Frame):
 
     def reset_words(self):
         self.correct_words.delete(0, 'end')
+
+    def get_length(self):
+        return self.correct_words.size()
