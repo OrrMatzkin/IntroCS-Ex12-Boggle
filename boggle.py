@@ -146,6 +146,7 @@ class Game(tk.Tk):
         self.board.random_board = self.random_board
         self.board.init_cubes()
         self.board.hide_and_show_cube_labels(True)
+        self.words_display.reset_words()
 
     def press_back_button(self):
         """

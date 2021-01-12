@@ -451,3 +451,6 @@ class WordDisplay(tk.Frame):
         :param word: word (str)
         """
         self.correct_words.insert(0, word)
+
+    def reset_words(self):
+        self.correct_words.delete(0, 'end')
