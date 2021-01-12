@@ -136,6 +136,7 @@ class Game(tk.Tk):
         self.reset_user_guesses()
         self.timer.stop_countdown()
         self.timer.restart_countdown()
+        self.score.reset_score()
         self.random_board = randomize_board()
         self.board.random_board = self.random_board
         self.board.init_cubes()

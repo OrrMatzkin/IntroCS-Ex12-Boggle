@@ -116,7 +116,6 @@ class Score(tk.Frame):
         """
         Resets the score back to zero and updates the label accordingly.
         """
-        print('reset score to 0')
         self.score = 0
         self._score_display['text'] = f'Score: {self.score}'
 
