@@ -23,7 +23,7 @@ class PlayFrame(tk.Frame):
         self.board.grid(row=0, column=1, sticky="nsew")
 
         self.words_display = WordDisplay(container)
-        self.words_display.grid(row=0, column=2, columnspan=2)
+        self.words_display.place(relx=0.5, rely=0.5)
 
         self.hint_button = tk.Button(self, text='Hint',
                                      font=(self._FONT, 18),

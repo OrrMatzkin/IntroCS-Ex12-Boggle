@@ -381,8 +381,6 @@ class Board(tk.Frame):
                 self.cubes[pos_x][pos_y].hide_and_show_label(hide)
 
 
-
-
 class WordDisplay(tk.Frame):
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 20
@@ -394,11 +392,22 @@ class WordDisplay(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
+        self.scroll_bar = tk.Scrollbar(self)
+        self.scroll_bar.pack(side='right', fill='y')
 
         self.configure(highlightbackground="black", highlightthickness=1)
 
-        self._word_display = tk.Label(self,
-                                      text='this will be the word display',
-                                      font=(self._FONT, self._FONT_SIZE))
+        self.correct_words = tk.Listbox(self, yscrollcommand=self.scroll_bar.set)
 
-        self._word_display.grid()
+        # for line in range(100):
+        #     self.correct_words.insert(line, "This is line number " + str(line))
+
+        self.correct_words.pack(side='left', fill='both')
+        self.scroll_bar.config(command=self.correct_words.yview)
+
+    def add_word(self, word):
+        """
+        addes the given word to the words display
+        :param word: word (str)
+        """
+        self.correct_words.insert(0, word)
