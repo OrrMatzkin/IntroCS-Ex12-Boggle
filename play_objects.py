@@ -119,6 +119,7 @@ class Cube(tk.Frame):
     _CHOSEN_COLOR = 'MistyRose4'
     _CORRECT_COLOR = 'SpringGreen3'
     _WRONG_COLOR = 'firebrick3'
+    _HINT_COLOR = 'sienna1'
 
 
     def __init__(self, parent, controller, letter, pos_x, pos_y):
@@ -245,6 +246,12 @@ class Cube(tk.Frame):
         Sets the color of the cube to _WRONG_COLOR
         """
         self.content.configure(bg=self._WRONG_COLOR)
+
+    def set_hint_color(self):
+        """
+        Sets the color of the cube to _HINT_COLOR
+        """
+        self.content.configure(bg=self._HINT_COLOR)
 
 
 class Board(tk.Frame):
@@ -380,18 +387,42 @@ class Board(tk.Frame):
                 pos[0] <= 3 and 0 <= pos[1] <= 3]
 
     def hide_and_show_cube_labels(self, hide):
-        print('test2')
+        """
+        Hides and shows all cubes content accordingly to the boolean value
+        given. If hide is True the function hides the cube content, if hide is
+        False the function shows the cubes content.
+        :param hide: a boolean representing the decision for the function
+        """
         for pos_x in range(len(self.random_board)):
             for pos_y in range(len(self.random_board[0])):
                 self.cubes[pos_x][pos_y].hide_and_show_label(hide)
 
     def color_selected_cubes(self, valid_word):
-        print(valid_word)
+        """
+        Colors the selected cubes. If valid_word is True the function colors
+        the cubes in the correct color (green) and if valid_word is False to
+        wrong color (red).
+        :param valid_word: a boolean value representing what color to color
+        :return:
+        """
         for pos in self.current_visited_positions:
             if valid_word:
                 self.cubes[pos[0]][pos[1]].set_correct_color()
             else:
                 self.cubes[pos[0]][pos[1]].set_wrong_color()
+
+    def color_hint(self, hint):
+        """
+        Colors the given cubes position in hint and show the hint word in the
+        above display.
+        the user.
+        :param hint: a tuple holding the hint word and positons
+        :return:
+        """
+        for pos in hint[1]:
+            self.cubes[pos[0]][pos[1]].set_hint_color()
+
+
 
 
 class WordDisplay(tk.Frame):

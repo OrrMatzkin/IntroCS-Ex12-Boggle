@@ -206,6 +206,7 @@ class Game(tk.Tk):
                 self.last_hint = \
                     optional_hint[random.randint(0, len(optional_hint) - 1)]
                 print("chosen hint:", str(self.last_hint))
+                self.board.color_hint(self.last_hint)
                 return
 
 
