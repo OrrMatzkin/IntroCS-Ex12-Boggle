@@ -5,7 +5,7 @@ from typing import List
 
 class Timer(tk.Frame):
     _FONT = 'Shree Devanagari 714'
-    _FONT_SIZE = 28
+    _FONT_SIZE = 40
     _SECONDS = 180
 
     def __init__(self, parent):
@@ -15,19 +15,14 @@ class Timer(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-        self.configure(highlightbackground="black", highlightthickness=1)
+        # self.configure(highlightbackground="black", highlightthickness=1)
         self.time_running = False
         self.seconds_left = self._SECONDS
         self._timer_display = tk.Label(self,
                                        text=self.convert_seconds_str(),
                                        font=(self._FONT, self._FONT_SIZE))
         self._timer_display.grid()
-        self.start = tk.Button(self, text="Start",
-                               command=self.start_countdown).grid()
-        self.stop = tk.Button(self, text="stop",
-                              command=self.stop_countdown).grid()
-        self.restart = tk.Button(self, text="restart",
-                                 command=self.restart_countdown).grid()
+
 
     def start_countdown(self):
         """
@@ -79,7 +74,7 @@ class Timer(tk.Frame):
 
 class Score(tk.Frame):
     _FONT = 'Shree Devanagari 714'
-    _FONT_SIZE = 20
+    _FONT_SIZE = 38
 
     def __init__(self, parent):
         """
@@ -88,7 +83,7 @@ class Score(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-        self.configure(highlightbackground="black", highlightthickness=1)
+        # self.configure(highlightbackground="black", highlightthickness=1)
         self.score = 0
 
         self._score_display = tk.Label(self,
@@ -97,11 +92,6 @@ class Score(tk.Frame):
                                        )
         self._score_display.grid()
 
-        self.add = tk.Button(self, text="add",
-                             command=self.add_score).grid()
-
-        self.restart = tk.Button(self, text="restart",
-                                 command=self.reset_score).grid()
 
     def add_score(self, score=1):
         """
@@ -122,11 +112,14 @@ class Score(tk.Frame):
 
 class Cube(tk.Frame):
     _FONT = 'Shree Devanagari 714'
-    _FONT_SIZE = 24
-    _WIDTH = 2
+    _FONT_SIZE = 22
+    _WIDTH = 3
     _HEIGHT = 1
     _MAIN_COLOR = 'white'
-    _CHOSEN_COLOR = 'red2'
+    _CHOSEN_COLOR = 'MistyRose4'
+    _CORRECT_COLOR = 'SpringGreen3'
+    _WRONG_COLOR = 'firebrick3'
+
 
     def __init__(self, parent, controller, letter, pos_x, pos_y):
         """
@@ -139,7 +132,7 @@ class Cube(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
-        self.configure(borderwidth=2, padx=4, pady=4)
+        self.configure(borderwidth=2, padx=6, pady=8)
         self.controller = controller
         self.letter = letter
         self.entered = False
@@ -158,6 +151,7 @@ class Cube(tk.Frame):
         self.content.bind("<<B1-Enter>>", self.mouse_enter_or_click)
         self.content.bind("<<B1-Leave>>", self.on_mouse_leave)
 
+
     def mouse_enter_or_click(self, event):
         """
         A method triggered when a cube is clicked or the mouse have entered
@@ -168,7 +162,7 @@ class Cube(tk.Frame):
         (board) is holding.
         :param event: bind event (not used)
         """
-        if not self.entered and self.controller.valid_next_cube(self):
+        if not self.entered and self.controller.valid_next_cube(self) and self.letter:
             self.content.configure(bg=self._CHOSEN_COLOR)
             self.controller.add_letter_to_current_word(self.letter)
             self.controller.add_position_to_positions_path(self.position)
@@ -240,6 +234,18 @@ class Cube(tk.Frame):
         self.letter = content
         self.content.configure(text=self.letter)
 
+    def set_correct_color(self):
+        """
+        Sets the color of the cube to _CORRECT_COLOR
+        """
+        self.content.configure(bg=self._CORRECT_COLOR)
+
+    def set_wrong_color(self):
+        """
+        Sets the color of the cube to _WRONG_COLOR
+        """
+        self.content.configure(bg=self._WRONG_COLOR)
+
 
 class Board(tk.Frame):
     _FONT = 'Shree Devanagari 714'
@@ -254,8 +260,7 @@ class Board(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.configure(padx=10, pady=10, highlightbackground="black",
-                       highlightthickness=1)
+        self.configure(padx=10, pady=10)
         self.word_display = tk.Label(self, text='',
                                      font=(self._FONT, self._FONT_SIZE))
         self.random_board = random_board
@@ -380,6 +385,14 @@ class Board(tk.Frame):
             for pos_y in range(len(self.random_board[0])):
                 self.cubes[pos_x][pos_y].hide_and_show_label(hide)
 
+    def color_selected_cubes(self, valid_word):
+        print(valid_word)
+        for pos in self.current_visited_positions:
+            if valid_word:
+                self.cubes[pos[0]][pos[1]].set_correct_color()
+            else:
+                self.cubes[pos[0]][pos[1]].set_wrong_color()
+
 
 class WordDisplay(tk.Frame):
     _FONT = 'Shree Devanagari 714'
@@ -392,15 +405,11 @@ class WordDisplay(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
+
         self.scroll_bar = tk.Scrollbar(self)
         self.scroll_bar.pack(side='right', fill='y')
 
-        self.configure(highlightbackground="black", highlightthickness=1)
-
-        self.correct_words = tk.Listbox(self, yscrollcommand=self.scroll_bar.set)
-
-        # for line in range(100):
-        #     self.correct_words.insert(line, "This is line number " + str(line))
+        self.correct_words = tk.Listbox(self, yscrollcommand=self.scroll_bar.set, width=22, height=14)
 
         self.correct_words.pack(side='left', fill='both')
         self.scroll_bar.config(command=self.correct_words.yview)

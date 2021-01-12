@@ -15,15 +15,18 @@ class PlayFrame(tk.Frame):
         # container.grid_columnconfigure(0, weight=1)
         self.random_board = random_board
         self.timer = Timer(container)
-        self.timer.grid(row=0, column=2, sticky='ne')
+        # self.timer.grid(row=0, column=2, sticky='ne')
+        self.timer.place(relx= 0.82, rely = 0.04)
         self.score = Score(container)
-        self.score.grid(row=0, column=3, sticky='ne')
+        # self.score.grid(row=0, column=3, sticky='ne')
+        self.score.place(relx=0.05, rely = 0.04)
 
         self.board = Board(container, self, random_board=self.random_board)
-        self.board.grid(row=0, column=1, sticky="nsew")
+        # self.board.grid(row=0, column=1, sticky="nsew")
+        self.board.place(relx=0.10, rely=0.14)
 
         self.words_display = WordDisplay(container)
-        self.words_display.place(relx=0.5, rely=0.5)
+        self.words_display.place(relx=0.55, rely=0.295)
 
         self.hint_button = tk.Button(self, text='Hint',
                                      font=(self._FONT, 18),

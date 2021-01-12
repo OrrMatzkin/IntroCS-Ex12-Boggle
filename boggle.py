@@ -89,6 +89,7 @@ class Game(tk.Tk):
             pass
         elif str(self._latest_input) in self._user_coordinates_inputs:
             # if the current path has already been tried
+            self.board.color_selected_cubes(False)
             pass
         else:
             self._user_coordinates_inputs[str(self._latest_input)] = True
@@ -100,10 +101,14 @@ class Game(tk.Tk):
                 # points to a valid word that has not been guessed before
                 self.add_score(
                     len(self._latest_input) ** self._SCORE_COEFFICIENT)
+                self.board.color_selected_cubes(True)
+                self.words_display.add_word(new_word)
                 self.found_words.append(new_word)
                 # TODO add change of colour to the word if correct
+            else:
+                self.board.color_selected_cubes(False)
+        self.after(400, self.board.reset_used_cube)
 
-        self.board.reset_used_cube()
         self.board.reset()
 
     def switch_start_restart(self):
