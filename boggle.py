@@ -17,6 +17,10 @@ class Game(tk.Tk):
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
     _FONT_TITLE = 'Ubicada Pro'
+    SECONDS = 5
+    _EXIT_TEXT = 'Are you sure you want to Exit your ongoing game?'
+    _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
+    _REMINDER_TEXT = 'To start a new game just press start'
 
     def __init__(self, *args, **kwargs):
         """
@@ -63,14 +67,19 @@ class Game(tk.Tk):
         self._latest_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
-
+        self.given_hints = []
         self.last_hint = None
 
     def reset_user_guesses(self):
+        """
+        rests all assets associated with user previous actions in the game
+        """
         self._word_dict = load_words_dict()
         self._latest_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
+        self.given_hints = []
+        self.last_hint = None
 
     def set_frame(self, page_name):
         """
@@ -104,7 +113,6 @@ class Game(tk.Tk):
                 self.board.color_selected_cubes(True)
                 self.words_display.add_word(new_word)
                 self.found_words.append(new_word)
-                # TODO add change of colour to the word if correct
             else:
                 self.board.color_selected_cubes(False)
         self.after(400, self.board.reset_used_cube)
@@ -131,6 +139,7 @@ class Game(tk.Tk):
         if not self.timer.time_running:
             self.timer.start_countdown()
             self.board.init_cubes()
+            self.reset_user_guesses()
             self.frames['play_frame'].start_button.configure(bg='white')
 
     def press_restart_button(self):
@@ -162,11 +171,11 @@ class Game(tk.Tk):
         continues.
         """
         window = tk.messagebox.askyesno('Restart Game',
-                                        'Are you sure you want to restart your ongoing game?',
+                                        self._RESTART_TEXT,
                                         icon='question')
         if window:
             window2 = tk.messagebox.showinfo('Reminder',
-                                             'To start a new game just press start',
+                                             self._REMINDER_TEXT,
                                              icon='info')
             self.press_restart_button()
         else:
@@ -174,9 +183,11 @@ class Game(tk.Tk):
             self.timer.start_countdown()
 
     def back_confirm(self):
+        # todo add doc
+
         self.timer.stop_countdown()
         window = tk.messagebox.askyesno('Exit Game',
-                                        'Are you sure you want to Exit your ongoing game?',
+                                        self._EXIT_TEXT,
                                         icon='question')
         if window:
             self.press_restart_button()
@@ -193,37 +204,48 @@ class Game(tk.Tk):
         self.score.add_score(score)
 
     def get_hint(self):
-        # TODO add doc
-        if not self.timer.time_running:
+        """
+        gives the player a hint for a word on the board
+        :return:
+        """
+        if not self.timer.time_running:  # if game is not currently ongoing
             return
         while True:
-            print("trying to get a hint")
             hint_length = random.randint(3, 4)
-            print("random int is", hint_length)
-            optional_hint = find_length_n_words(hint_length, self.random_board,
-                                                self._word_dict)
-            print("optional hint is", optional_hint)
-            if optional_hint and optional_hint[0] not in self.found_words:
-                self.last_hint = \
-                    optional_hint[random.randint(0, len(optional_hint) - 1)]
-                print("chosen hint:", str(self.last_hint))
-                self.board.color_hint(self.last_hint)
-                return
+            # generates a hint
+            optional_hints = find_length_n_words(hint_length,
+                                                 self.random_board,
+                                                 self._word_dict)
+            if not optional_hints:
+                continue
+            else:
+                while True:
+                    checked_hint = optional_hints[
+                        random.randint(0, len(optional_hints) - 1)]
+                    # checks hint validity
+                    if str(checked_hint[1]) not in \
+                            list(self._user_coordinates_inputs.keys()) \
+                            and checked_hint not in self.given_hints and \
+                            checked_hint[0] not in self.found_words:
+                        self.last_hint = checked_hint
+                        self.given_hints.append(self.last_hint)
+                        if len(self.given_hints) > 10:
+                            self.given_hints.pop(0)
+                        self.board.color_hint(self.last_hint)
+                        break
+            break
 
     def end_of_time(self):
         """
         Displays a message box with game some
         """
         window3 = tk.messagebox.showinfo("Time's over",
-                                        f'Well done!\nScore: {self.score.score}\nYou found {self.words_display.get_length()} words',
-
-                                     )
+                                         f'Well done!\nScore: '
+                                         f'{self.score.score}\nYou found '
+                                         f'{self.words_display.get_length()} '
+                                         f'words')
         if window3:
             self.press_restart_button()
-
-
-
-
 
 
 if __name__ == '__main__':

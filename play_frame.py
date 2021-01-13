@@ -4,9 +4,12 @@ from play_objects import Timer, Score, Board, WordDisplay
 
 
 class PlayFrame(tk.Frame):
+    # todo add doc
     _FONT = 'Shree Devanagari 714'
 
     def __init__(self, parent, controller, random_board):
+        # todo add doc
+
         tk.Frame.__init__(self, parent)
         self.controller = controller
         container = tk.Frame(self)
@@ -17,10 +20,10 @@ class PlayFrame(tk.Frame):
         self.board.place(relx=0.10, rely=0.14)
 
         self.timer = Timer(container, self.controller)
-        self.timer.place(relx= 0.82, rely = 0.04)
+        self.timer.place(relx=0.82, rely=0.04)
 
         self.score = Score(container)
-        self.score.place(relx=0.05, rely = 0.04)
+        self.score.place(relx=0.05, rely=0.04)
 
         self.board = Board(container, self, random_board=self.random_board)
         self.board.place(relx=0.10, rely=0.14)
@@ -45,9 +48,6 @@ class PlayFrame(tk.Frame):
         #     side='right')
         self.back_button = tk.Button(self, text='Back',
                                      font=(self._FONT, 18),
-                                     width=14, command=self.controller.press_back_button)
+                                     width=14,
+                                     command=self.controller.press_back_button)
         self.back_button.pack(side='left')
-
-
-
-

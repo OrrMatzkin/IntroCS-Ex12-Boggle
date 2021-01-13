@@ -4,9 +4,10 @@ from typing import List
 
 
 class Timer(tk.Frame):
+    # TODO add doc
+
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 40
-    _SECONDS = 10
 
     def __init__(self, parent, controller):
         """
@@ -18,12 +19,11 @@ class Timer(tk.Frame):
         self.controller = controller
         # self.configure(highlightbackground="black", highlightthickness=1)
         self.time_running = False
-        self.seconds_left = self._SECONDS
+        self.seconds_left = self.controller.SECONDS
         self._timer_display = tk.Label(self,
                                        text=self.convert_seconds_str(),
                                        font=(self._FONT, self._FONT_SIZE))
         self._timer_display.grid()
-
 
     def start_countdown(self):
         """
@@ -60,9 +60,9 @@ class Timer(tk.Frame):
         :return:
         """
         if self.time_running:
-            self.seconds_left = self._SECONDS + 1
+            self.seconds_left = self.controller.SECONDS + 1
         else:
-            self.seconds_left = self._SECONDS
+            self.seconds_left = self.controller.SECONDS
             self._timer_display['text'] = self.convert_seconds_str()
 
     def convert_seconds_str(self):
@@ -73,16 +73,10 @@ class Timer(tk.Frame):
         time_remain = datetime.timedelta(seconds=self.seconds_left)
         return str(time_remain)[3:]
 
-    # def end_of_time(self):
-    #     """
-    #     Displays a message box with game some
-    #     """
-    #     window = tk.messagebox.showinfo("Time's over",
-    #                                     f'Well done!\nScore: {self.score.score}\nYou found {self.words_display.get_length()}',
-    #                                  )
-
 
 class Score(tk.Frame):
+    # TODO add doc
+
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 38
 
@@ -102,13 +96,11 @@ class Score(tk.Frame):
                                        )
         self._score_display.grid()
 
-
     def add_score(self, score=1):
         """
         Added the given score to score updates the label accordingly.
         :param score: the amount of score to add
         """
-        print(f'added {score} to score')
         self.score += score
         self._score_display['text'] = f'Score: {self.score}'
 
@@ -121,6 +113,8 @@ class Score(tk.Frame):
 
 
 class Cube(tk.Frame):
+    # TODO add doc
+
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 22
     _WIDTH = 3
@@ -130,7 +124,6 @@ class Cube(tk.Frame):
     _CORRECT_COLOR = 'SpringGreen3'
     _WRONG_COLOR = 'firebrick3'
     _HINT_COLOR = 'sienna1'
-
 
     def __init__(self, parent, controller, letter, pos_x, pos_y):
         """
@@ -162,7 +155,6 @@ class Cube(tk.Frame):
         self.content.bind("<<B1-Enter>>", self.mouse_enter_or_click)
         self.content.bind("<<B1-Leave>>", self.on_mouse_leave)
 
-
     def mouse_enter_or_click(self, event):
         """
         A method triggered when a cube is clicked or the mouse have entered
@@ -173,7 +165,8 @@ class Cube(tk.Frame):
         (board) is holding.
         :param event: bind event (not used)
         """
-        if not self.entered and self.controller.valid_next_cube(self) and self.letter:
+        if not self.entered and self.controller.valid_next_cube(
+                self) and self.letter:
             self.content.configure(bg=self._CHOSEN_COLOR)
             self.controller.add_letter_to_current_word(self.letter)
             self.controller.add_position_to_positions_path(self.position)
@@ -265,6 +258,8 @@ class Cube(tk.Frame):
 
 
 class Board(tk.Frame):
+    # TODO add doc
+
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 30
 
@@ -307,7 +302,7 @@ class Board(tk.Frame):
                     row.append(cube)
                 else:
                     self.cubes[pos_x][pos_y].set_content(self.random_board[
-                                                           pos_x][pos_y])
+                                                             pos_x][pos_y])
             if first:
                 self.cubes.append(row)
 
@@ -338,6 +333,7 @@ class Board(tk.Frame):
         self.current_visited_positions.append(cube_position)
 
     def get_visited_cube_positions(self):
+        # TODO add doc
         return self.current_visited_positions
 
     def get_word(self):
@@ -434,6 +430,7 @@ class Board(tk.Frame):
 
 
 class WordDisplay(tk.Frame):
+    # TODO add doc
     _FONT = 'Shree Devanagari 714'
     _FONT_SIZE = 20
 
@@ -448,20 +445,24 @@ class WordDisplay(tk.Frame):
         self.scroll_bar = tk.Scrollbar(self)
         self.scroll_bar.pack(side='right', fill='y')
 
-        self.correct_words = tk.Listbox(self, yscrollcommand=self.scroll_bar.set, width=22, height=14)
+        self.correct_words = tk.Listbox(self,
+                                        yscrollcommand=self.scroll_bar.set,
+                                        width=22, height=14)
 
         self.correct_words.pack(side='left', fill='both')
         self.scroll_bar.config(command=self.correct_words.yview)
 
     def add_word(self, word):
         """
-        addes the given word to the words display
+        adds the given word to the words display
         :param word: word (str)
         """
         self.correct_words.insert(0, word)
 
     def reset_words(self):
+        # TODO add doc
         self.correct_words.delete(0, 'end')
 
     def get_length(self):
+        # TODO add doc
         return self.correct_words.size()
