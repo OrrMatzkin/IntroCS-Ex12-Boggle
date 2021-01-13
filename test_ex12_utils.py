@@ -200,7 +200,8 @@ class TestFindWords:
         expected = [("CAT", [(0, 0), (0, 1), (0, 2)]),
                     ("DOG", [(1, 0), (1, 1), (1, 2)]),
                     ("BIT", [(2, 0), (2, 1), (2, 2)])]
-        assert find_length_n_words(3, board, word_dict) == expected
+        assert sorted(find_length_n_words(3, board, word_dict)) == sorted(
+            expected)
 
     def test_basic_cols(self):
         board = [['C', 'D', 'B', 'Q'],
@@ -254,14 +255,14 @@ class TestFindWords:
 
     # Special cases
 
-    # def test_not_use_same_letter_twice(self):
-    #     board = [['A', 'T', 'R', 'Q'],
-    #              ['Q', 'L', 'E', 'Q'],
-    #              ['Q', 'Q', 'B', 'Q'],
-    #              ['Q', 'Q', 'Q', 'Q']]
-    #     word_dict = {'ALBERTA': True}
-    #     expected = []
-    #     assert find_length_n_words(7, board, word_dict) == expected
+    def test_not_use_same_letter_twice(self):
+        board = [['A', 'T', 'R', 'Q'],
+                 ['Q', 'L', 'E', 'Q'],
+                 ['Q', 'Q', 'B', 'Q'],
+                 ['Q', 'Q', 'Q', 'Q']]
+        word_dict = {'ALBERTA': True}
+        expected = []
+        assert find_length_n_words(7, board, word_dict) == expected
 
     def test_words_not_in_board(self):
         board = [['Q', 'Q', 'Q', 'Q'],

@@ -1,6 +1,18 @@
+#################################################################
+# FILE : boggle.py
+# WRITER 1 : Avihu Almog , avihuxp, 315709980
+# WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
+# EXERCISE : intro2cs2 ex12 2020
+# DESCRIPTION: the main program for the boggle program
+# STUDENTS WE DISCUSSED THE EXERCISE WITH:
+# WEB PAGES WE USED:
+# Graphical User Interfaces with Tk - https://docs.python.org/3/library/tk.html
+# itertools — Functions creating iterators for efficient looping -
+# https://docs.python.org/3/library/itertools.html
+#################################################################
+
 import tkinter as tk
 from tkinter import messagebox
-
 from boggle_board_randomizer import *
 from ex12_utils import *
 from instructions_frame import InstructionsFrame
@@ -17,7 +29,7 @@ class Game(tk.Tk):
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
     _FONT_TITLE = 'Ubicada Pro'
-    SECONDS = 5
+    SECONDS = 180
     _EXIT_TEXT = 'Are you sure you want to Exit your ongoing game?'
     _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
     _REMINDER_TEXT = 'To start a new game just press start'

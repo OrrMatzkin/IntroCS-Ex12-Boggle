@@ -1,3 +1,12 @@
+#################################################################
+# FILE : play_objects.py
+# WRITER 1 : Avihu Almog , avihuxp, 315709980
+# WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
+# EXERCISE : intro2cs2 ex12 2020
+# DESCRIPTION: the main program for the boggle program
+# STUDENTS WE DISCUSSED THE EXERCISE WITH:
+# WEB PAGES WE USED:
+#################################################################
 import datetime
 import tkinter as tk
 from typing import List

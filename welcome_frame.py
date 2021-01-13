@@ -1,3 +1,13 @@
+#################################################################
+# FILE : welcome_frame.py
+# WRITER 1 : Avihu Almog , avihuxp, 315709980
+# WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
+# EXERCISE : intro2cs2 ex12 2020
+# DESCRIPTION: the main program for the boggle program
+# STUDENTS WE DISCUSSED THE EXERCISE WITH:
+# WEB PAGES WE USED:
+#################################################################
+
 import tkinter as tk
 from PIL import ImageTk, Image
 

@@ -1,3 +1,13 @@
+#################################################################
+# FILE : ex12_utils.py
+# WRITER 1 : Avihu Almog , avihuxp, 315709980
+# WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
+# EXERCISE : intro2cs2 ex12 2020
+# DESCRIPTION: the main program for the boggle program
+# STUDENTS WE DISCUSSED THE EXERCISE WITH:
+# WEB PAGES WE USED:
+#################################################################
+
 import copy
 from typing import List, Tuple, Union, Dict
 
@@ -66,9 +76,9 @@ def find_length_n_words(n: int, board: List[List[str]],
     and their coordinates
     """
     if n < 5:
-        not_recursive_find_length_n_words(n, board, words)
+        return not_recursive_find_length_n_words(n, board, words)
     else:
-        recursive_find_length_n_words(n, board, words)
+        return recursive_find_length_n_words(n, board, words)
 
 
 def is_distance_valid(coord_a: Tuple[int, int],
