@@ -1,7 +1,5 @@
-import time
-from typing import List, Tuple, Union
-
-from boggle_board_randomizer import randomize_board
+import copy
+from typing import List, Tuple, Union, Dict
 
 STEP_LIST = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0),
              (-1, -1)]
@@ -56,6 +54,23 @@ def is_valid_path(board: List[List[str]],
     return path_str if path_str in words else None
 
 
+def find_length_n_words(n: int, board: List[List[str]],
+                        words: dict):
+    """
+    calls the appropriate find_n_length_words where recursive is faster than
+    not recursive for n > 4
+    :param n: the length of the required word
+    :param board: a 2D list of letters
+    :param words: a dictionary with the words as keys
+    :return: the list of tuples of words that have been found
+    and their coordinates
+    """
+    if n < 5:
+        not_recursive_find_length_n_words(n, board, words)
+    else:
+        recursive_find_length_n_words(n, board, words)
+
+
 def is_distance_valid(coord_a: Tuple[int, int],
                       coord_b: Tuple[int, int]) -> bool:
     """
@@ -68,7 +83,113 @@ def is_distance_valid(coord_a: Tuple[int, int],
                     coord_a[COL] - coord_b[COL]) in STEP_LIST else False
 
 
-def find_length_n_words(n: int, board: List[List[str]], words: dict) -> \
+def search_words(curr_board: List[List[str]],
+                 curr_row: int,
+                 curr_col: int,
+                 words_dict: Dict,
+                 word_remaining_len: int,
+                 curr_coordinates: Union[List[Tuple[int, int]], List],
+                 found_word_lst: Union[Tuple[str, Union[List[Tuple[int, int]],
+                                                        List]], List],
+                 curr_str: str,
+                 required_word_length: int) -> \
+        Union[Tuple[str, Union[List[Tuple[int, int]], List]], List, None]:
+    """
+    recursively goes through all possible solutions for the current board
+    with the given words from the word dictionary, the given desired length
+    for the word and while abiding to the rules of the game
+    :param required_word_length: the required length of the word
+    :param word_remaining_len: the number of remaining letters the gather for
+    the word
+    :param curr_board: the board to search on
+    :param curr_row: current x position in the board
+    :param curr_col: current x position in the board
+    :param words_dict: the dictionary of possible word to find
+    :param curr_coordinates: the list of all coordinates visited in current
+    path
+    :param found_word_lst: the list of tuples of words that have been found
+    and their coordinates
+    :param curr_str: the string created in the current path
+    :return: the found_word_lst of all the routs starting with the current
+    starting place
+    """
+    if curr_row < 0 or curr_row > len(curr_board) - 1 or \
+            curr_col < 0 or curr_col > len(curr_board[0]) - 1:  # if out of
+        # the board
+        return
+    if word_remaining_len < 0:  # if reached maximum word length
+        return
+
+    if curr_board[curr_row][curr_col] != "_":  # if had not been here before
+        word_remaining_len -= 1
+        if word_remaining_len < 0:
+            return
+        new_str = curr_str + curr_board[curr_row][curr_col]
+        new_coords = curr_row, curr_col
+        new_board = copy.deepcopy(curr_board)
+        new_board[curr_row][curr_col] = "_"
+        new_coordinates_lst = copy.deepcopy(curr_coordinates)
+        new_coordinates_lst.append(new_coords)
+        new_dict = {key: value for (key, value) in words_dict.items() if
+                    new_str in key and len(key) >= required_word_length}
+        if not new_dict:  # if no
+            # matching words in the dict for the current str
+            # print("not any")
+            return
+        # print("are any")
+        if new_str in new_dict.keys() and len(new_coordinates_lst) == \
+                required_word_length:  # if found a word
+            found_word_tuple = new_str, new_coordinates_lst
+            found_word_lst.append(tuple(found_word_tuple))
+        else:
+            for next_row, next_col in STEP_LIST:  # take next step
+                search_words(new_board,
+                             curr_row + next_row,
+                             curr_col + next_col,
+                             new_dict,
+                             word_remaining_len,
+                             new_coordinates_lst,
+                             found_word_lst,
+                             new_str,
+                             required_word_length)
+        return found_word_lst
+
+
+def recursive_find_length_n_words(n: int, board: List[List[str]],
+                                  words: dict) -> Union[List, None]:
+    """
+    finds all possible words with given length n in the board and returns a
+    list of tuples (word,[list of coordinates for the path])
+    :param n: the length of the required word
+    :param board: a 2D list of letters
+    :param words: a dictionary with the words as keys
+    :return: the list of tuples of words that have been found
+    and their coordinates
+    """
+    if not words:
+        return []
+    if n not in range(MIN_WORD_LEN, MAX_WORD_LEN + 1):
+        return []
+    found_words_list = []
+    for i in range(len(board) * len(board[0])):  # loops for each tile in the
+        row, col = i // len(board), i % len(board[0])
+        new_found_lst = search_words(curr_board=board,
+                                     curr_row=row,
+                                     curr_col=col,
+                                     words_dict=words,
+                                     word_remaining_len=n,
+                                     curr_coordinates=[],
+                                     found_word_lst=[],
+                                     curr_str="",
+                                     required_word_length=n)
+        if new_found_lst:
+            found_words_list.extend(new_found_lst)
+    return found_words_list
+
+
+def not_recursive_find_length_n_words(n: int,
+                                      board: List[List[str]],
+                                      words: dict) -> \
         Union[List[Tuple[str, Tuple]], None]:
     """
     finds all words with paths with length n in the given board
@@ -126,7 +247,7 @@ def modified_permutations(iterable, r=None):
                 checker = 0
                 for t in range(len(for_y) - 1):
                     if is_distance_valid(for_y[t], for_y[t + 1]):  # checks
-                        # for no exceptions from rulse
+                        # for no exceptions from rules
                         checker += 1
                 if checker == r - 1:
                     yield for_y
@@ -136,36 +257,4 @@ def modified_permutations(iterable, r=None):
 
 
 if __name__ == "__main__":
-    # TODO remove
-
     pass
-    rand_board = randomize_board()
-    word_dict = load_words_dict()
-    # coords_in_board = [(i, j) for i in range(len(rand_board)) for j in
-    #                    range(len(
-    #                        rand_board[0]))]
-    # # print(list(permutations(coords_in_board, 3)))
-    # # print(list(permutations(coords_in_board[:][::-1], 3)))
-    # # if ((3, 3), (3, 2), (3, 1)) in coords_in_board:
-    # #     print("!")
-    for p in range(10):
-        y = time.time()
-        find_length_n_words(p, rand_board, word_dict)
-        x = time.time()
-        find_length_n_words(p, rand_board, word_dict)
-        z = time.time()
-        find_length_n_words(p, rand_board, word_dict)
-        w = time.time()
-        avg = ((x - y) + (z - x) + (w - z)) / 3
-        print(f"n = {p} took on average:", avg,
-              "specifically:", x - y, z - x, w - z)
-    # per = list(modified_permutations(((0, 0), (0, 1), (0, 2), (0, 3),
-    #                                   (1, 0), (1, 1), (1, 2), (1, 3),
-    #                                   (2, 0), (2, 1), (2, 2), (2, 3),
-    #                                   (3, 0), (3, 1), (3, 2), (3, 3)), 5))
-    # print("lst_len:", len(per))
-    # # print("per_lst", per)
-    # print("set_len:", len(set(per)))
-    # # print(set(per))
-    # if ((2, 2), (0, 1), (1, 2)) in set(per):
-    #     print("!")
