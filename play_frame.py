@@ -44,7 +44,7 @@ class PlayFrame(tk.Frame):
         self.hint_button = tk.Button(self, text='Hint',
                                      font=(self._FONT, 18),
                                      width=14,
-                                     command=self.controller.get_hint).pack(
+                                     command=self.controller.confirm_hint).pack(
             side='right')
         self.start_button = tk.Button(self, text='Start',
                                       font=(self._FONT, 18, 'bold'),

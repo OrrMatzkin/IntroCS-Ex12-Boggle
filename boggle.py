@@ -33,6 +33,7 @@ class Game(tk.Tk):
     _EXIT_TEXT = 'Are you sure you want to Exit your ongoing game?'
     _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
     _REMINDER_TEXT = 'To start a new game just press start'
+    _HINT_TEXT = 'The cost of a hint is 1 point and your score is currently 0'
 
     def __init__(self, *args, **kwargs):
         """
@@ -152,13 +153,15 @@ class Game(tk.Tk):
             self.timer.start_countdown()
             self.board.init_cubes()
             self.reset_user_guesses()
-            self.frames['play_frame'].start_button.configure(bg='white')
+            self.frames['play_frame'].start_button.configure(font=(self._FONT, 18))
+
 
     def press_restart_button(self):
         """
         if player presses restart button
         """
         self.frames['play_frame'].start_button.configure(text='Start')
+        self.frames['play_frame'].start_button.configure(font=(self._FONT, 18, 'bold'))
         self.reset_user_guesses()
         self.timer.stop_countdown()
         self.timer.restart_countdown()
@@ -214,6 +217,16 @@ class Game(tk.Tk):
         :param score: score (int)
         """
         self.score.add_score(score)
+
+    def confirm_hint(self):
+        if self.score.score > 0:
+            self.score.add_score(-1)
+            self.get_hint()
+        else:
+            window = tk.messagebox.showinfo('Not enough score',
+                                             self._HINT_TEXT,
+                                             icon='info')
+
 
     def get_hint(self):
         """
