@@ -131,7 +131,7 @@ class Game(tk.Tk):
                 self.board.color_selected_cubes(False)
         self.after(400, self.board.reset_used_cube)
 
-        self.board.reset()
+        self.board.reset_board()
 
     def switch_start_restart(self):
         """
@@ -165,7 +165,7 @@ class Game(tk.Tk):
         self.frames['play_frame'].start_button.configure(font=(self._FONT, 18, 'bold'))
         self.reset_user_guesses()
         self.timer.stop_countdown()
-        self.timer.restart_countdown()
+        self.timer.reset_timer()
         self.score.reset_score()
         self.random_board = randomize_board()
         self.board.random_board = self.random_board

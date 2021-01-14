@@ -9,7 +9,7 @@
 #################################################################
 
 import tkinter as tk
-from play_objects import Timer, Score, Board, WordDisplay
+from game_objects import Timer, Score, Board, WordDisplay
 
 
 class PlayFrame(tk.Frame):

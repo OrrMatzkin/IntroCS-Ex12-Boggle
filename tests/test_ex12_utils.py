@@ -2,7 +2,7 @@ import os
 
 from ex12_utils import *
 
-TEST_DICT_ROOT = "test-dicts"
+TEST_DICT_ROOT = "tests"
 
 
 # noinspection Duplicates
