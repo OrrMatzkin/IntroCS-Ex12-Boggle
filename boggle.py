@@ -22,19 +22,22 @@ from frames.welcome_frame import WelcomeFrame
 
 class Game(tk.Tk):
     """
-    A Tk class inherited Game class
+    A Tk class inherited Game class.
     """
     _SCREEN_SIZE = (750, 500)
     _SCORE_COEFFICIENT = 2
     _HINT_COST = 2
-    TIME_IN_SECONDS = 180
-    _TITLE_NAME = 'IntroCS Ex12'
+    TIME_IN_SECONDS = 20
+
+    _GAME_TITLE = 'IntroCS Ex12'
+
     _FONT = 'Shree Devanagari 714'
-    _FONT_TITLE = 'Ubicada Pro'
+
     _EXIT_TEXT = 'Are you sure you want to exit your ongoing game?'
     _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
-    _REMINDER_TEXT = 'To start a new game just press start'
-    _HINT_TEXT = f"The cost of a hint is {_HINT_COST} points,\nYou don't have enough points."
+    _REMINDER_TEXT = 'To start a new game just press start...'
+    _HINT_TEXT = f"The cost of a hint is {_HINT_COST} points,\n" \
+                 f"You don't have enough points."
 
     def __init__(self, *args, **kwargs):
         """
@@ -43,11 +46,12 @@ class Game(tk.Tk):
         :param args: inherited args from Tk class
         :param kwargs: inherited kwargs from Tk class
         """
-        # initializing Tk class, Game is the root Tk
+        # initializing Tk class, the Game is the root Tk
         tk.Tk.__init__(self, *args, **kwargs)
         self.resizable(width=False, height=False)
         self.geometry(f'{self._SCREEN_SIZE[0]}x{self._SCREEN_SIZE[1]}')
-        self.title(self._TITLE_NAME)
+        self.title(self._GAME_TITLE)
+
         self.random_board = randomize_board()
         self._word_dict = load_words_dict()
 
@@ -71,7 +75,8 @@ class Game(tk.Tk):
         self.frames["instructions_frame"].grid(row=0, column=0, sticky="nsew")
 
         self.set_frame("welcome_frame")
-        self.bind('<ButtonRelease-1>', self.release)
+
+        self.bind('<ButtonRelease-1>', self.game_cycle)
 
         self.board = self.frames['play_frame'].board
         self.score = self.frames['play_frame'].score
@@ -84,9 +89,49 @@ class Game(tk.Tk):
         self.given_hints = []
         self.last_hint = None
 
+    def set_frame(self, page_name):
+        """
+        Shows a frame for the given page name.
+        """
+        frame = self.frames[page_name]
+        frame.tkraise()
+
+    def game_cycle(self, event):
+        """
+        This is a single game cycle, this function is called every time the
+        player releases the left mouse button. The main purpose of function
+        is to check the validity of the created word.
+        :param event: a bind event (not used)
+        """
+        self._latest_input = self.board.get_visited_cube_positions()
+        # if coordinates list is empty
+        if not self._latest_input:
+            pass
+        # if the current path has already been tried
+        elif str(self._latest_input) in self._user_coordinates_inputs:
+            self.board.color_selected_cubes(False)
+        else:
+            # add path to paths dictionary
+            self._user_coordinates_inputs[str(self._latest_input)] = True
+            # checks if path points to a valid word
+            new_word = is_valid_path(self.random_board, self._latest_input,
+                                     self._word_dict)
+            # if path points to a valid word that has notbeen guessed before
+            if new_word and new_word not in self.found_words:
+                self.add_score(len(self._latest_input) **
+                               self._SCORE_COEFFICIENT)
+                self.board.color_selected_cubes(True)
+                self.words_display.add_word(new_word)
+                self.found_words.append(new_word)
+            else:
+                self.board.color_selected_cubes(False)
+
+        self.after(400, self.board.reset_used_cube)
+        self.board.reset_board()
+
     def reset_user_guesses(self):
         """
-        rests all assets associated with user previous actions in the game
+        Rests all assets associated with user previous actions in the game
         """
         self._word_dict = load_words_dict()
         self._latest_input = []
@@ -94,44 +139,6 @@ class Game(tk.Tk):
         self.found_words = []
         self.given_hints = []
         self.last_hint = None
-
-    def set_frame(self, page_name):
-        """
-        Show a frame for the given page name
-        """
-        frame = self.frames[page_name]
-        frame.tkraise()
-
-    def release(self, event):
-        """
-        if player releases the left mouse button
-        :param event:
-        """
-        self._latest_input = self.board.get_visited_cube_positions()
-        if not self._latest_input:  # if coordinates list is empty
-            pass
-        elif str(self._latest_input) in self._user_coordinates_inputs:
-            # if the current path has already been tried
-            self.board.color_selected_cubes(False)
-            pass
-        else:
-            self._user_coordinates_inputs[str(self._latest_input)] = True
-            # add path to paths dictionary
-            new_word = is_valid_path(self.random_board, self._latest_input,
-                                     self._word_dict)  # check if path points
-            # to a valid word
-            if new_word and new_word not in self.found_words:  # if the path
-                # points to a valid word that has not been guessed before
-                self.add_score(
-                    len(self._latest_input) ** self._SCORE_COEFFICIENT)
-                self.board.color_selected_cubes(True)
-                self.words_display.add_word(new_word)
-                self.found_words.append(new_word)
-            else:
-                self.board.color_selected_cubes(False)
-        self.after(400, self.board.reset_used_cube)
-
-        self.board.reset_board()
 
     def switch_start_restart(self):
         """
@@ -148,21 +155,22 @@ class Game(tk.Tk):
 
     def press_start_button(self):
         """
-        if player presses start button
+        If player presses start button.
         """
         if not self.timer.time_running:
             self.timer.start_countdown()
             self.board.init_cubes()
             self.reset_user_guesses()
-            self.frames['play_frame'].start_button.configure(font=(self._FONT, 18))
-
+            self.frames['play_frame'].start_button.configure(font=(self._FONT,
+                                                                   16))
 
     def press_restart_button(self):
         """
-        if player presses restart button
+        If player presses restart button.
         """
         self.frames['play_frame'].start_button.configure(text='Start')
-        self.frames['play_frame'].start_button.configure(font=(self._FONT, 18, 'bold'))
+        self.frames['play_frame'].start_button.configure(font=(self._FONT, 16,
+                                                               'bold'))
         self.reset_user_guesses()
         self.timer.stop_countdown()
         self.timer.reset_timer()
@@ -175,7 +183,7 @@ class Game(tk.Tk):
 
     def press_back_button(self):
         """
-        if player presses back button.
+        If player presses main menu button.
         """
         if not self.timer.time_running:
             self.set_frame("welcome_frame")
@@ -189,26 +197,29 @@ class Game(tk.Tk):
         If user presses 'YES' the game restart, if user presses 'NO' the game
         continues.
         """
-        window = tk.messagebox.askyesno('Restart Game',
-                                        self._RESTART_TEXT,
-                                        icon='question')
-        if window:
-            window2 = tk.messagebox.showinfo('Reminder',
-                                             self._REMINDER_TEXT,
-                                             icon='info')
+        rest_conf_window = tk.messagebox.askyesno('Restart Game',
+                                                  self._RESTART_TEXT,
+                                                  icon='question')
+        if rest_conf_window:
+            tk.messagebox.showinfo('Reminder', self._REMINDER_TEXT,
+                                   icon='info')
             self.press_restart_button()
         else:
             self.board.hide_and_show_cube_labels(False)
             self.timer.start_countdown()
 
     def back_confirm(self):
-        # todo add doc
+        """
+        Displays a confirmation window before exiting the game.
+        If user presses 'YES' the game stops and the user gets back
+        to the welcome screen, if user presses 'NO' the game continues.
+        """
         time_was_running = self.timer.time_running
         self.timer.stop_countdown()
-        window = tk.messagebox.askyesno('Exit Game',
+        back_conf_window = tk.messagebox.askyesno('Exit Game',
                                         self._EXIT_TEXT,
                                         icon='question')
-        if window:
+        if back_conf_window:
             self.press_restart_button()
             self.set_frame("welcome_frame")
         else:
@@ -218,27 +229,32 @@ class Game(tk.Tk):
 
     def add_score(self, score):
         """
-        adds the given score to score and updates the Score Widget.
+        Adds the given score to score and updates the Score Widget.
         :param score: score (int)
         """
         self.score.add_score(score)
 
     def confirm_hint(self):
+        """
+        Checks if the user has enough points to use the hint option.
+        If there isn't enough points the function show a an error message,
+        else give the user a hint.
+
+        """
         if self.score.score - self._HINT_COST > 0:
             self.score.add_score(-self._HINT_COST)
-            self.get_hint()
+            self.give_hint()
         else:
-            window = tk.messagebox.showinfo('Not enough score',
-                                             self._HINT_TEXT,
-                                             icon='info')
+            tk.messagebox.showinfo('Not enough score', self._HINT_TEXT,
+                                   icon='info')
 
-
-    def get_hint(self):
+    def give_hint(self):
         """
-        gives the player a hint for a word on the board
+        Gives the player a hint for a word on the board.
         :return:
         """
-        if not self.timer.time_running:  # if game is not currently ongoing
+        # if game is not currently ongoing
+        if not self.timer.time_running:
             return
         while True:
             hint_length = random.randint(3, 4)
@@ -267,14 +283,13 @@ class Game(tk.Tk):
 
     def end_of_time(self):
         """
-        Displays a message box with game some
+        Displays a the end game message with the current game achievements.
         """
-        window3 = tk.messagebox.showinfo("Time's over",
-                                         f'Well done!\nScore: '
-                                         f'{self.score.score}\nYou found '
-                                         f'{self.words_display.get_length()} '
-                                         f'words')
-        if window3:
+        end_message = tk.messagebox.showinfo("Time's over",
+                                         f'Well done!\n\nScore: '
+                                         f'{self.score.score}\nWords found: '
+                                         f'{self.words_display.get_length()}')
+        if end_message:
             self.press_restart_button()
 
 
