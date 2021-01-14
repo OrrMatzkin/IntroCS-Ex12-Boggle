@@ -13,7 +13,8 @@ import tkinter as tk
 
 class InstructionsFrame(tk.Frame):
     """
-    the Class for the instruction page of the game
+    The instruction page frame of the game.
+    InstructionsFrame is an inherited object from tkinter Frame class.
     """
     _PNG_PATH = "assets/instructions.png"
     _FONT = 'Shree Devanagari 714'

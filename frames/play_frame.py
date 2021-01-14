@@ -2,24 +2,31 @@
 # FILE : play_frame.py
 # WRITER 1 : Avihu Almog , avihuxp, 315709980
 # WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
-# EXERCISE : intro2cs2 ex12 2020
-# DESCRIPTION: the main program for the boggle program
-# STUDENTS WE DISCUSSED THE EXERCISE WITH:
-# WEB PAGES WE USED:
+# EXERCISE : intro2cs Ex12 2020
+# DESCRIPTION: The playing screen frame
+# STUDENTS WE DISCUSSED THE EXERCISE WITH: N/A
+# WEB PAGES WE USED: N/A
 #################################################################
 
 import tkinter as tk
-
 from play_objects import Timer, Score, Board, WordDisplay
 
 
 class PlayFrame(tk.Frame):
-    # todo add doc
+    """
+    The playing screen (frame) of the game.
+    PlayFrame is an inherited object from tkinter Frame class.
+    """
     _FONT = 'Shree Devanagari 714'
 
     def __init__(self, parent, controller, random_board):
-        # todo add doc
-
+        """
+        Initiates the playing page of the game.
+        This function creates the Timer, Score, Board and WordDisplay objects.
+        :param parent: the root of the game
+        :param controller: the Game class
+        :param random_board: a 4x4 board (list of lists)
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         container = tk.Frame(self)
@@ -35,25 +42,23 @@ class PlayFrame(tk.Frame):
         self.score = Score(container)
         self.score.place(relx=0.05, rely=0.046)
 
-
         self.words_display = WordDisplay(container)
         self.words_display.place(relx=0.6, rely=0.295)
 
-        self.hint_button = tk.Button(self, text=f'Hint (-{self.controller._HINT_COST})',
+        self.hint_button = tk.Button(self,
+                                     text=f'Hint (-{self.controller._HINT_COST})',
                                      font=(self._FONT, 16),
                                      width=14,
-                                     command=self.controller.confirm_hint).pack(
-            side='right')
+                                     command=self.controller.confirm_hint).\
+            pack(side='right')
+
         self.start_button = tk.Button(self, text='Start',
                                       font=(self._FONT, 16, 'bold'),
                                       width=14,
-                                      command=self.controller.switch_start_restart)
+                                      command=self.controller.
+                                      switch_start_restart)
         self.start_button.pack(side='right', expand='yes')
-        # self.restart_button = tk.Button(self, text='Restart',
-        #                                 font=(self._FONT, 18),
-        #                                 width=14,
-        #                                 command=self.controller.press_restart_button).pack(
-        #     side='right')
+
         self.back_button = tk.Button(self, text='Main Menu',
                                      font=(self._FONT, 16),
                                      width=14,
