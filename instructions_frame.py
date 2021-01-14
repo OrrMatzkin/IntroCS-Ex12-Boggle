@@ -20,6 +20,7 @@ class InstructionsFrame(tk.Frame):
     the Class for the instruction page of the game
     """
     _PNG_PATH = "instructions.png"
+    _FONT = 'Shree Devanagari 714'
 
     def __init__(self, parent, controller):
         """
@@ -35,7 +36,7 @@ class InstructionsFrame(tk.Frame):
 
         self.instructions_img = self.load_instructions_png()
 
-        self.button = tk.Button(self, text="Go to the start page",
+        self.button = tk.Button(self, text="Go to the start page", font=(self._FONT, 18),
                                 command=lambda: controller.set_frame(
                                     "welcome_frame"))
         self.place_objects()
@@ -45,9 +46,14 @@ class InstructionsFrame(tk.Frame):
         loads the instructions image from file
         :return: the instructions image as a Label
         """
-        load = Image.open(image_path)
-        resized = load.resize(PNG_REQUIRED_SIZE, Image.ANTIALIAS)
-        render = ImageTk.PhotoImage(resized)
+        # load = Image.open(image_path)
+        # resized = load.resize(PNG_REQUIRED_SIZE, Image.ANTIALIAS)
+        # render = ImageTk.PhotoImage(resized)
+        # instructions_img = tk.Label(self, image=render)
+        # instructions_img.image = render
+        # load = Image.open(self._HUJI_LOGO_PATH)
+        # render = ImageTk.PhotoImage(load)
+        render = tk.PhotoImage(file=image_path)
         instructions_img = tk.Label(self, image=render)
         instructions_img.image = render
         return instructions_img

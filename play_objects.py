@@ -27,7 +27,7 @@ class Timer(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.time_running = False
-        self.seconds_left = self.controller.SECONDS
+        self.seconds_left = self.controller.TIME_IN_SECONDS
         self._timer_display = tk.Label(self,
                                        text=self.convert_seconds_str(),
                                        font=(self._FONT, self._FONT_SIZE))
@@ -68,9 +68,9 @@ class Timer(tk.Frame):
         :return:
         """
         if self.time_running:
-            self.seconds_left = self.controller.SECONDS + 1
+            self.seconds_left = self.controller.TIME_IN_SECONDS + 1
         else:
-            self.seconds_left = self.controller.SECONDS
+            self.seconds_left = self.controller.TIME_IN_SECONDS
             self._timer_display['text'] = self.convert_seconds_str()
         self._timer_display['fg'] = 'black'
 
@@ -87,7 +87,7 @@ class Score(tk.Frame):
     # TODO add doc
 
     _FONT = 'Shree Devanagari 714'
-    _FONT_SIZE = 38
+    _FONT_SIZE = 34
 
     def __init__(self, parent):
         """
@@ -453,6 +453,7 @@ class WordDisplay(tk.Frame):
         """
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
+
 
         self.scroll_bar = tk.Scrollbar(self)
         self.scroll_bar.pack(side='right', fill='y')

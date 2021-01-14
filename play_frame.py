@@ -33,15 +33,13 @@ class PlayFrame(tk.Frame):
         self.timer.place(relx=0.82, rely=0.04)
 
         self.score = Score(container)
-        self.score.place(relx=0.05, rely=0.04)
+        self.score.place(relx=0.05, rely=0.046)
 
-        self.board = Board(container, self, random_board=self.random_board)
-        self.board.place(relx=0.10, rely=0.14)
 
         self.words_display = WordDisplay(container)
-        self.words_display.place(relx=0.55, rely=0.295)
+        self.words_display.place(relx=0.6, rely=0.295)
 
-        self.hint_button = tk.Button(self, text='Hint',
+        self.hint_button = tk.Button(self, text=f'Hint (-{self.controller._HINT_COST})',
                                      font=(self._FONT, 18),
                                      width=14,
                                      command=self.controller.confirm_hint).pack(

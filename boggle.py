@@ -24,17 +24,17 @@ class Game(tk.Tk):
     """
     A Tk class inherited Game class
     """
-    _SCORE_COEFFICIENT = 2
-    _HINT_COST = 5
-    _TITLE_NAME = 'IntroCS Ex12'
     _SCREEN_SIZE = (750, 500)
+    _SCORE_COEFFICIENT = 2
+    _HINT_COST = 2
+    TIME_IN_SECONDS = 180
+    _TITLE_NAME = 'IntroCS Ex12'
     _FONT = 'Shree Devanagari 714'
     _FONT_TITLE = 'Ubicada Pro'
-    SECONDS = 180
-    _EXIT_TEXT = 'Are you sure you want to Exit your ongoing game?'
+    _EXIT_TEXT = 'Are you sure you want to exit your ongoing game?'
     _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
     _REMINDER_TEXT = 'To start a new game just press start'
-    _HINT_TEXT = f"The cost of a hint is {_HINT_COST} points,\nYou don't have enough score"
+    _HINT_TEXT = f"The cost of a hint is {_HINT_COST} points,\nYou don't have enough points."
 
     def __init__(self, *args, **kwargs):
         """
@@ -200,7 +200,7 @@ class Game(tk.Tk):
 
     def back_confirm(self):
         # todo add doc
-
+        time_was_running = self.timer.time_running
         self.timer.stop_countdown()
         window = tk.messagebox.askyesno('Exit Game',
                                         self._EXIT_TEXT,
@@ -209,8 +209,9 @@ class Game(tk.Tk):
             self.press_restart_button()
             self.set_frame("welcome_frame")
         else:
-            self.timer.start_countdown()
-            self.board.hide_and_show_cube_labels(False)
+            if time_was_running:
+                self.timer.start_countdown()
+                self.board.hide_and_show_cube_labels(False)
 
     def add_score(self, score):
         """
