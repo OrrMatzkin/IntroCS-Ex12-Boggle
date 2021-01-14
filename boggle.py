@@ -15,7 +15,7 @@ import tkinter as tk
 from tkinter import messagebox
 from boggle_board_randomizer import *
 from ex12_utils import *
-from instructions_frame import InstructionsFrame
+from frames.instructions_frame import InstructionsFrame
 from play_frame import PlayFrame
 from frames.welcome_frame import WelcomeFrame
 

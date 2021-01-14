@@ -3,9 +3,9 @@
 # WRITER 1 : Avihu Almog , avihuxp, 315709980
 # WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
 # EXERCISE : intro2cs Ex12 2020
-# DESCRIPTION: the welcome screen frame
+# DESCRIPTION: The welcome screen frame
 # STUDENTS WE DISCUSSED THE EXERCISE WITH: N/A
-# WEB PAGES WE USED: N/A
+# WEB PAGES WE USED: https://docs.python.org/3.3/library/tkinter.html#images
 #################################################################
 
 import tkinter as tk
