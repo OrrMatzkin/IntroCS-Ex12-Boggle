@@ -20,7 +20,7 @@ class WelcomeFrame(tk.Frame):
               'font': 'Ubicada Pro',
               'size': 84,
               'color': 'red3'}
-    _SUB_TITLE = {'text': '3-Minute Word Game',
+    _SUB_TITLE = {'text': '3-Minute Word Game             ',
                   'font': 'Hobo Std',
                   'size': 14,
                   'color': 'grey'}
@@ -45,15 +45,15 @@ class WelcomeFrame(tk.Frame):
                               font=(self._TITLE['font'], self._TITLE['size']),
                               fg=self._TITLE['color']).pack(side='top', expand='yes')
 
+        self.sub_title = tk.Label(self, text=self._SUB_TITLE['text'],
+                                  font=(self._SUB_TITLE['font'],
+                                        self._SUB_TITLE['size']),
+                                  fg=self._SUB_TITLE['color']).pack(side='top', expand='yes')
+
         photo = tk.PhotoImage(file=self._BOGGLE_LOGO_PATH)
         self.game_logo = tk.Label(self, image=photo)
         self.game_logo.image = photo
         self.game_logo.pack(side='top', expand='no')
-
-        self.sub_title = tk.Label(self, text=self._SUB_TITLE['text'],
-                                  font=(self._SUB_TITLE['font'],
-                                        self._SUB_TITLE['size']),
-                                  fg=self._SUB_TITLE['color']).place(relx=0.37, rely=0.25)
 
         self.play_button = tk.Button(self, text='Play', font=(self._FONT, 18),
                                      width=16, command=lambda: controller.

@@ -2,7 +2,7 @@
 # FILE : boggle.py
 # WRITER 1 : Avihu Almog , avihuxp, 315709980
 # WRITER 2 : Orr Matzkin , orr.matzkin , 314082884
-# EXERCISE : intro2cs2 ex12 2020
+# EXERCISE : intro2cs Ex12 2020
 # DESCRIPTION: the main program for the boggle program
 # STUDENTS WE DISCUSSED THE EXERCISE WITH:
 # WEB PAGES WE USED:
@@ -27,7 +27,7 @@ class Game(tk.Tk):
     _SCREEN_SIZE = (750, 500)
     _SCORE_COEFFICIENT = 2
     _HINT_COST = 2
-    TIME_IN_SECONDS = 20
+    TIME_IN_SECONDS = 180
 
     _GAME_TITLE = 'IntroCS Ex12'
 
@@ -83,7 +83,7 @@ class Game(tk.Tk):
         self.timer = self.frames['play_frame'].timer
         self.words_display = self.frames['play_frame'].words_display
 
-        self._latest_input = []
+        self._latest_user_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
         self.given_hints = []
@@ -103,22 +103,22 @@ class Game(tk.Tk):
         is to check the validity of the created word.
         :param event: a bind event (not used)
         """
-        self._latest_input = self.board.get_visited_cube_positions()
+        self._latest_user_input = self.board.get_visited_cubes_positions()
         # if coordinates list is empty
-        if not self._latest_input:
+        if not self._latest_user_input:
             pass
         # if the current path has already been tried
-        elif str(self._latest_input) in self._user_coordinates_inputs:
+        elif str(self._latest_user_input) in self._user_coordinates_inputs:
             self.board.color_selected_cubes(False)
         else:
             # add path to paths dictionary
-            self._user_coordinates_inputs[str(self._latest_input)] = True
+            self._user_coordinates_inputs[str(self._latest_user_input)] = True
             # checks if path points to a valid word
-            new_word = is_valid_path(self.random_board, self._latest_input,
+            new_word = is_valid_path(self.random_board, self._latest_user_input,
                                      self._word_dict)
             # if path points to a valid word that has notbeen guessed before
             if new_word and new_word not in self.found_words:
-                self.add_score(len(self._latest_input) **
+                self.add_score(len(self._latest_user_input) **
                                self._SCORE_COEFFICIENT)
                 self.board.color_selected_cubes(True)
                 self.words_display.add_word(new_word)
@@ -134,7 +134,7 @@ class Game(tk.Tk):
         Rests all assets associated with user previous actions in the game
         """
         self._word_dict = load_words_dict()
-        self._latest_input = []
+        self._latest_user_input = []
         self._user_coordinates_inputs = dict()
         self.found_words = []
         self.given_hints = []
@@ -294,5 +294,5 @@ class Game(tk.Tk):
 
 
 if __name__ == '__main__':
-    app = Game()
-    app.mainloop()
+    game = Game()
+    game.mainloop()

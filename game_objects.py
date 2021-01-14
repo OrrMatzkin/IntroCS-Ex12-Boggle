@@ -34,7 +34,7 @@ class Timer(tk.Frame):
         self._timer_display = tk.Label(self,
                                        text=self.convert_seconds_str(),
                                        font=(self._FONT, self._FONT_SIZE))
-        self._timer_display.grid()
+        self._timer_display.pack()
 
     def start_countdown(self):
         """
@@ -345,7 +345,7 @@ class Board(tk.Frame):
         """
         self.current_visited_positions.append(cube_position)
 
-    def get_visited_cube_positions(self):
+    def get_visited_cubes_positions(self):
         """
         Returns the all visited cube position
         :return: a list of positions (tuples)
@@ -377,10 +377,10 @@ class Board(tk.Frame):
             return True
         else:
             return cube.get_position() in \
-                   self.get_all_possible_neighbours_position(
+                   self.get_all_possible_neighbours_positions(
                        self.last_cube_visited)
 
-    def get_all_possible_neighbours_position(self, cube):
+    def get_all_possible_neighbours_positions(self, cube):
         """
         Returns a list with all the valid cubes positions (neighbours) for
         the given cube.
