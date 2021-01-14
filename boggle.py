@@ -17,7 +17,7 @@ from boggle_board_randomizer import *
 from ex12_utils import *
 from instructions_frame import InstructionsFrame
 from play_frame import PlayFrame
-from welcome_frame import WelcomeFrame
+from frames.welcome_frame import WelcomeFrame
 
 
 class Game(tk.Tk):
@@ -177,8 +177,11 @@ class Game(tk.Tk):
         """
         if player presses back button.
         """
-        self.board.hide_and_show_cube_labels(True)
-        self.after(100, self.back_confirm)
+        if not self.timer.time_running:
+            self.set_frame("welcome_frame")
+        else:
+            self.board.hide_and_show_cube_labels(True)
+            self.after(100, self.back_confirm)
 
     def restart_confirm(self):
         """

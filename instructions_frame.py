@@ -10,7 +10,6 @@
 
 import tkinter as tk
 
-from PIL import ImageTk, Image
 
 PNG_REQUIRED_SIZE = (750, 470)
 
@@ -19,7 +18,7 @@ class InstructionsFrame(tk.Frame):
     """
     the Class for the instruction page of the game
     """
-    _PNG_PATH = "instructions.png"
+    _PNG_PATH = "assets/instructions.png"
     _FONT = 'Shree Devanagari 714'
 
     def __init__(self, parent, controller):
@@ -36,9 +35,12 @@ class InstructionsFrame(tk.Frame):
 
         self.instructions_img = self.load_instructions_png()
 
-        self.button = tk.Button(self, text="Go to the start page", font=(self._FONT, 18),
+        self.back_button = tk.Button(self, text="Back", font=(self._FONT, 18),
                                 command=lambda: controller.set_frame(
                                     "welcome_frame"))
+        self.play_button = tk.Button(self, text="Play", font=(self._FONT, 18),
+                                     command=lambda: controller.set_frame(
+                                         "play_frame"))
         self.place_objects()
 
     def load_instructions_png(self, image_path=_PNG_PATH):
@@ -64,5 +66,7 @@ class InstructionsFrame(tk.Frame):
         """
         self.instructions_img.pack()
         self.instructions_img.place()
-        self.button.pack()
-        self.button.place(relwidth=1, rely=0.95)
+        self.back_button.pack(side='left', fill='x', expand='yes')
+        # self.back_button.place(relwidth=1, rely=0.95)
+        self.play_button.pack(side='right', fill='x', expand='yes')
+        # self.play_button.place(relwidth=1, rely=0.95)

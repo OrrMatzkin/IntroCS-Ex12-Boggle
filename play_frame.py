@@ -40,12 +40,12 @@ class PlayFrame(tk.Frame):
         self.words_display.place(relx=0.6, rely=0.295)
 
         self.hint_button = tk.Button(self, text=f'Hint (-{self.controller._HINT_COST})',
-                                     font=(self._FONT, 18),
+                                     font=(self._FONT, 16),
                                      width=14,
                                      command=self.controller.confirm_hint).pack(
             side='right')
         self.start_button = tk.Button(self, text='Start',
-                                      font=(self._FONT, 18, 'bold'),
+                                      font=(self._FONT, 16, 'bold'),
                                       width=14,
                                       command=self.controller.switch_start_restart)
         self.start_button.pack(side='right', expand='yes')
@@ -54,8 +54,8 @@ class PlayFrame(tk.Frame):
         #                                 width=14,
         #                                 command=self.controller.press_restart_button).pack(
         #     side='right')
-        self.back_button = tk.Button(self, text='Back',
-                                     font=(self._FONT, 18),
+        self.back_button = tk.Button(self, text='Main Menu',
+                                     font=(self._FONT, 16),
                                      width=14,
                                      command=self.controller.press_back_button)
         self.back_button.pack(side='left')
