@@ -26,7 +26,6 @@ class Timer(tk.Frame):
         # initializing inherited Frame class
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        # self.configure(highlightbackground="black", highlightthickness=1)
         self.time_running = False
         self.seconds_left = self.controller.SECONDS
         self._timer_display = tk.Label(self,
@@ -73,6 +72,7 @@ class Timer(tk.Frame):
         else:
             self.seconds_left = self.controller.SECONDS
             self._timer_display['text'] = self.convert_seconds_str()
+        self._timer_display['fg'] = 'black'
 
     def convert_seconds_str(self):
         """
