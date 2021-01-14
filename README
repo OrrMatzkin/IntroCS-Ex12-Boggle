@@ -32,7 +32,12 @@ Additions to the code:
      the combination based function has very good performance for lower n
      values, and a very bad runtime (worse then O(e^n)), the results of our
      runtime analysis can be seen in the added files:
-     a. combinations_based.png - analysis of ~10 runs of the combination based
-     function, with the graph of (e**n)/2 for reference.
-     b. combinations_based_vs_recursive.png - analysis of ~300 runs of the
-     combination based and recursive functions.
+     a. project_extras/combinations_based.png - analysis of ~10 runs of the
+     combination based function, with the graph of (e**n)/2 for reference.
+     b. project_extras/combinations_based_vs_recursive.png - analysis of ~300
+     runs of the combination based and recursive functions.
+
+you can also see the entire structure of the project:
+    a. project_extras/game flow chart.jpg - a flow chart of the entire program
+    b. project_extras/classes chart.jpg - an inheritance chart of all the
+    classes in the program
