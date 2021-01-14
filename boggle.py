@@ -25,6 +25,7 @@ class Game(tk.Tk):
     A Tk class inherited Game class
     """
     _SCORE_COEFFICIENT = 2
+    _HINT_COST = 5
     _TITLE_NAME = 'IntroCS Ex12'
     _SCREEN_SIZE = (750, 500)
     _FONT = 'Shree Devanagari 714'
@@ -33,7 +34,7 @@ class Game(tk.Tk):
     _EXIT_TEXT = 'Are you sure you want to Exit your ongoing game?'
     _RESTART_TEXT = 'Are you sure you want to restart your ongoing game?'
     _REMINDER_TEXT = 'To start a new game just press start'
-    _HINT_TEXT = 'The cost of a hint is 1 point and your score is currently 0'
+    _HINT_TEXT = f"The cost of a hint is {_HINT_COST} points,\nYou don't have enough score"
 
     def __init__(self, *args, **kwargs):
         """
@@ -219,8 +220,8 @@ class Game(tk.Tk):
         self.score.add_score(score)
 
     def confirm_hint(self):
-        if self.score.score > 0:
-            self.score.add_score(-1)
+        if self.score.score - self._HINT_COST > 0:
+            self.score.add_score(-self._HINT_COST)
             self.get_hint()
         else:
             window = tk.messagebox.showinfo('Not enough score',

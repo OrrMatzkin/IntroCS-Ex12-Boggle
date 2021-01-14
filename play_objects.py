@@ -204,7 +204,10 @@ class Cube(tk.Frame):
             if self.content:
                 self.content.event_generate("<<B1-Leave>>")
             current_widget = widget
-            current_widget.event_generate("<<B1-Enter>>")
+            try:
+                current_widget.event_generate("<<B1-Enter>>")
+            except AttributeError:
+                pass
 
     def get_position(self):
         """
