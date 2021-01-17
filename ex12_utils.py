@@ -142,11 +142,9 @@ def search_words(curr_board: List[List[str]],
         new_coordinates_lst.append(new_coords)
         new_dict = {key: value for (key, value) in words_dict.items() if
                     new_str in key and len(key) >= required_word_length}
-        if not new_dict:  # if no
-            # matching words in the dict for the current str
-            # print("not any")
+        if not new_dict:  # if no matching words in the dict for the current
+            # str
             return
-        # print("are any")
         if new_str in new_dict.keys() and len(new_coordinates_lst) == \
                 required_word_length:  # if found a word
             found_word_tuple = new_str, new_coordinates_lst

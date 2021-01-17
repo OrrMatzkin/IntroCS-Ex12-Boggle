@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /test_ex12_utils.zip
+/runtime_analysis.xlsx
