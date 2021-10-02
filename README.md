@@ -47,10 +47,6 @@ Start the game, run the *boggle.py* file
 ![main Screenshot](https://github.com/OrrMatzkin/IntroCS-Ex12-Boggle/blob/main/project_extras/Screenshot%202021-10-02%20at%2022.59.41.png?raw=true)
 ![game Screenshot](https://github.com/OrrMatzkin/IntroCS-Ex12-Boggle/blob/main/project_extras/Screenshot%202021-10-02%20at%2023.03.16.png?raw=true)
 
-  
-## Demo
-
-![App gif](https://github.com/OrrMatzkin/IntroCS-Ex12-Boggle/blob/main/project_extras/boggle_gif.gif?raw=true)
 ## API Reference
 
 **`find_length_n_words(num, board, words)`**
@@ -72,3 +68,7 @@ The recursive function preforms better for higher *n* values, while the combinat
 analysis of ~300 runs of the combination based and recursive functions.
 
 The use of 2 separate sub-functions is neccesry becuase we needed the hints words to be found in a very fast pace so the player wont feel any delay.
+
+## Demo
+
+![App gif](https://github.com/OrrMatzkin/IntroCS-Ex12-Boggle/blob/main/project_extras/boggle_gif.gif?raw=true)
