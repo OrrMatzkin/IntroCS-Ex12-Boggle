@@ -6,7 +6,7 @@ As part of The Hebrew University of Jerusalem course *"67101 - Introduction to C
 Boggle is a word game invented by Allan Turoff. 
 For more information about the game see https://en.wikipedia.org/wiki/Boggle.
 
-For the game instructions run the game localy.
+For the game instructions run the game locally.
 
 
 ![build](https://img.shields.io/badge/build-passing-brightgreen)
