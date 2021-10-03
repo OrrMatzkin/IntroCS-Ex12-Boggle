@@ -13,12 +13,6 @@ For the game instructions run the game locally.
 
 ![platform](https://camo.githubusercontent.com/fb4912e741e566f3089bd8ca3561a536cc352ecfae75127d2fab3e1852e2234d/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f706c6174666f726d2d6c696e75782532302537432532306d61636f7325323025374325323077696e646f77732d6c6967687467726579) 
 
-## Requirements
-Boggle requires the followin to run:
-
-- Python 3.8.2+
-- Tkinter package 8.6+
-
 ## Features
 
 - Click and drag mechanism
@@ -26,7 +20,12 @@ Boggle requires the followin to run:
 - Hint helper (see **API Reference** for more details)
 - Cross platform
 
-  
+## Requirements
+Boggle requires the followin to run:
+
+- Python 3.8.2+
+- Tkinter package 8.6+
+
 ## Run Locally
 
 Clone the project
